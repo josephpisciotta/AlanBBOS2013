@@ -45,6 +45,11 @@ function CLIconsole() {
                this.buffer = "";
            }
            // TODO: Write a case for Ctrl-C.
+           if (chr == String.fromCharCode(8))
+           {
+	           this.deleteText();
+	           this.buffer += " ";
+           }
            else
            {
                // This is a "normal" character, so ...
@@ -55,7 +60,10 @@ function CLIconsole() {
            }
        }
     };
-
+	this.deleteText = function(){
+        this.CurrentXPosition = this.CurrentXPosition - offset;
+        _DrawingContext.drawText(this.CurrentFont, this.CurrentFontSize, this.CurrentXPosition, this.CurrentYPosition, " ");
+	}
     this.putText = function(text) {
        // My first inclination here was to write two functions: putChar() and putString().
        // Then I remembered that JavaScript is (sadly) untyped and it won't differentiate
