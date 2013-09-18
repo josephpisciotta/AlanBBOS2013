@@ -40,12 +40,12 @@ function hostInit()
    document.getElementById("btnStartOS").focus();
 
    // Check for our testing and enrichment core.
-   /*
-if (typeof Glados === "function") {
+   
+   if (typeof Glados === "function") {
       _GLaDOS = new Glados();
       _GLaDOS.init();
    };
-*/
+
 
 }
 

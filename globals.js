@@ -68,4 +68,4 @@ var _SarcasticMode = false;
 var krnKeyboardDriver = null;
 
 // For testing...
-//var _GLaDOS = null;
+var _GLaDOS = null;
