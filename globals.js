@@ -11,8 +11,8 @@
 //
 // Global CONSTANTS
 //
-var APP_NAME = "jOS - F";  // 'cause I was at a loss for a better name.
-var APP_VERSION = "0.01";   // What did you expect?
+var APP_NAME = "jOS F";  // 'cause I was at a loss for a better name.
+var APP_VERSION = "1.00";   // What did you expect?
 
 var CPU_CLOCK_INTERVAL = 100;   // This is in ms, or milliseconds, so 1000 = 1 second.
 
@@ -31,7 +31,10 @@ var _OSclock = 0;       // Page 23.
 var _Mode = 0;   // 0 = Kernel Mode, 1 = User Mode.  See page 21.
 
 var _Canvas = null;               // Initialized in hostInit().
+var _TaskbarCanvas = null;        // Initialized in hostInit().
 var _DrawingContext = null;       // Initialized in hostInit().
+var _TaskbarContext = null;       // Initialized in hostInit().
+
 var _DefaultFontFamily = "sans";  // Ignored, I think. The was just a place-holder in 2008, but the HTML canvas may have use for it.
 var _DefaultFontSize = 13;
 var _FontHeightMargin = 4;        // Additional space added to font size when advancing a line.
@@ -44,13 +47,19 @@ var _KernelInterruptQueue = null;
 var _KernelBuffers = null;
 var _KernelInputQueue = null;
 
+var _ShellList = null;
+
 // Standard input and output
 var _StdIn  = null;
 var _StdOut = null;
 
+var _Date = null;
+
 // UI
 var _Console = null;
 var _OsShell = null;
+
+var _SystemStatus = "Running";
 
 // At least this OS is not trying to kill you. (Yet.)
 var _SarcasticMode = false;
@@ -59,4 +68,4 @@ var _SarcasticMode = false;
 var krnKeyboardDriver = null;
 
 // For testing...
-var _GLaDOS = null;
+//var _GLaDOS = null;
