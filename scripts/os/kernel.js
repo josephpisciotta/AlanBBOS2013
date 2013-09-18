@@ -23,6 +23,8 @@ function krnBootstrap()      // Page 8.
    _KernelInputQueue = new Queue();      // Where device input lands before being processed out somewhere.
    _Console = new CLIconsole();          // The command line interface / console I/O device.
 
+   _ShellList = new Array();
+
    // Initialize the CLIconsole.
    _Console.init();
 
@@ -185,6 +187,15 @@ function krnTrace(msg)
 function krnTrapError(msg)
 {
     hostLog("OS ERROR - TRAP: " + msg);
+    _TaskbarContext = null;
+    _Console.clearScreen();
+    
+    _DrawingContext.fillStyle ="#FF0000";
+    _DrawingContext.fillRect(0,0, 500, 500);
+    _DrawingContext.fillStyle = "#0000FF";
+    _DrawingContext.drawText("Arial", 20, 0, 250, "OS ERROR: " +msg);
+    
     // TODO: Display error on console, perhaps in some sort of colored screen. (Perhaps blue?)
     krnShutdown();
+    clearInterval(_hardwareClockID);
 }

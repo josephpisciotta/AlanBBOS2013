@@ -12,6 +12,7 @@ function Shell() {
     this.commandList = [];
     this.curses      = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
     this.apologies   = "[sorry]";
+ 
     // Methods
     this.init        = shellInit;
     this.putPrompt   = shellPutPrompt;
@@ -79,6 +80,40 @@ function shellInit() {
     sc.description = "<string> - Sets the prompt.";
     sc.function = shellPrompt;
     this.commandList[this.commandList.length] = sc;
+    
+    // load
+    sc = new ShellCommand();
+    sc.command = "load";
+    sc.description = "Load code from input.";
+    sc.function = shellLoad;
+    this.commandList[this.commandList.length] = sc;
+    
+    // whereami
+    sc = new ShellCommand();
+    sc.command = "whereami";
+    sc.description = "- Displays the current location";
+    sc.function = shellWhereAmI;
+    this.commandList[this.commandList.length] = sc;
+    
+    // date
+    sc = new ShellCommand();
+    sc.command = "date";
+    sc.description = "- Displays the current date and time";
+    sc.function = shellDateTime;
+    this.commandList[this.commandList.length] = sc;
+    
+    // status
+    sc = new ShellCommand();
+    sc.command = "status";
+    sc.description = "<string> - Sets status message on taskbar";
+    sc.function = shellStatus;
+    this.commandList[this.commandList.length] = sc;
+
+	sc = new ShellCommand();
+    sc.command = "shellbg";
+    sc.description = "<string> - Sets the background color of the Shell. Input HEX color eg. 00FF00";
+    sc.function = shellBackgroundColor;
+    this.commandList[this.commandList.length] = sc;
 
     // processes - list the running processes and their IDs
     // kill <id> - kills the specified process id.
@@ -99,6 +134,14 @@ function shellHandleInput(buffer)
     // 
     // Parse the input...
     //
+    if (_ShellList.length == 0)
+    	_ShellList[0] = buffer;
+    else {
+    	_ShellList.push(buffer);
+    }
+    hostLog(_ShellList.length);
+    
+    
     var userCommand = new UserCommand();
     userCommand = shellParseInput(buffer);
     // ... and assign the command and args to local variables.
@@ -144,6 +187,8 @@ function shellHandleInput(buffer)
         }
     }
 }
+
+
 
 function shellParseInput(buffer)
 {
@@ -304,6 +349,19 @@ function shellMan(args)
         _StdIn.putText("Usage: man <topic>  Please supply a topic.");
     }
 }
+function shellLoad()
+{
+	var uInput = document.getElementById("taProgramInput");
+	var valid = /^[0-9A-F ]+$/i.test(uInput.value);
+	if(valid){
+		_StdIn.putText(uInput.value);
+	}
+	else{
+		_StdIn.putText("Invalid Input.");
+	}
+	
+	
+}
 
 function shellTrace(args)
 {
@@ -360,4 +418,45 @@ function shellPrompt(args)
     {
         _StdIn.putText("Usage: prompt <string>  Please supply a string.");
     }
+}
+
+function shellDateTime()
+{
+    var date = new Date();
+    _StdIn.putText(date.toString());
+}
+
+function shellWhereAmI() {
+
+    var output = window.location.href;
+
+    _StdIn.putText(output);
+}
+
+function shellStatus(args) {
+    if (args.length > 0)
+    {
+        _SystemStatus = args[0];
+    }
+    else
+    {
+        _StdIn.putText("Usage: status <string>  Please supply a string.");
+    }
+}
+
+function shellKrnTrapErrorTest(){
+    // we don't want to kill the OS so we'll pass false for the kill switch
+    return krnTrapError("This is just an OS Error trap test.", false);
+}
+
+function shellBackgroundColor(args){
+ if (args.length > 0)
+    {
+        _Canvas.style.backgroundColor= "#" + args[0];
+    }
+    else
+    {
+        _StdIn.putText("Usage: shellbg <color> in HEX with lowercase letters eg. 00ff00");
+    }
+	
 }
