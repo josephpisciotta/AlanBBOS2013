@@ -99,6 +99,23 @@ function CLIconsole() {
 		   	}
 			   
 		   }
+		   else if (chr == "DWN"){
+		   	if(this.listIndex <= _ShellList.length - 1){
+			   	this.listIndex--;
+		   		this.firstUp = false;
+			   this.buffer = _ShellList[_ShellList.length - this.listIndex - 1];
+			   this.clearLine();
+			   this.CurrentXPosition = 0;
+			   this.putText(_OsShell.promptStr);
+			   this.putText(this.buffer);
+			   
+			   krnTrace(this.listIndex);
+		   	}
+		   	else{
+			   	
+		   	}
+			   
+		   }
            else
            {
                // This is a "normal" character, so ...
