@@ -20,11 +20,17 @@ var TIMER_IRQ = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt prio
                     // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ = 1;  
 
+var TOTAL_MEMORY = 768;
+var MEM_BLOCK_SIZE = 255;
 
 //
 // Global Variables
 //
 var _CPU = null;
+
+var _Memory = null;
+
+var _MemoryTableCells = null;
 
 var _OSclock = 0;       // Page 23.
 

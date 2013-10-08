@@ -39,6 +39,9 @@ function hostInit()
 	// Set focus on the start button.
    document.getElementById("btnStartOS").focus();
 
+   // Create Memory view
+   createMemoryTable();
+
    // Check for our testing and enrichment core.
    
    if (typeof Glados === "function") {
@@ -87,9 +90,14 @@ function hostBtnStartOS_click(btn)
     // .. set focus on the OS console display ... 
     document.getElementById("display").focus();
     
+    // Create Memory
+    _Memory = new Memory();
+    
     // ... Create and initialize the CPU ...
     _CPU = new Cpu();
     _CPU.init();
+    
+    
 
     // ... then set the host clock pulse ...
     _hardwareClockID = setInterval(hostClockPulse, CPU_CLOCK_INTERVAL);
