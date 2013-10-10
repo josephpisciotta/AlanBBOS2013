@@ -1,7 +1,7 @@
 /* josf.css */
 
 body {
-   background: #064406 -webkit-linear-gradient(#06fd40 0%, #064406 90.00%)  no-repeat;
+   background:#c1d9c8  no-repeat;
    font-family: Helvetica, Verdana, Arial, sans-serif;
 	font-size: 12pt;
 	font-weight: normal;
@@ -46,16 +46,26 @@ h3 {
 	font-size: 8pt;
    text-align: center;
 }
-
+#divMain{
+	margin-bottom: 30px;
+}
 #divMemDisplay {
-	margin-left: 900px;
 	width:400px;
 	height:400px;
 	overflow:scroll;
-	float: left;
 }
 #memTable {
 	width:400px;
 	height: 800px;
 	background: #999999;
+}
+#cpuTable{
+	background:#999;
+	margin-top: 5px;
+	width:400px;
+}
+#pcbTable{
+	background:#999;
+	margin-top: 5px;
+	width:400px;
 }

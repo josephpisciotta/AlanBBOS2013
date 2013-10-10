@@ -35,7 +35,7 @@ function createMemoryTable()
 
     for( var i = 0; i < 96; i++ )
     {
-		if(i === 0 || i === 32 || i === 64) // First memory location of each plock should be colored
+		if(i === 0) // First memory location of each block should be colored
 		{
 			rows[i] = memoryTable.insertRow(i);
 			rows[i].style.backgroundColor = "silver";
@@ -83,3 +83,50 @@ function updateMemoryDisplay()
 		}
 	}
 }
+
+function clearCPU()
+{
+	_CPU.PC = 0;
+	_CPU.Acc = 0;
+	_CPU.Xreg = 0;
+	_CPU.Yreg = 0;
+	_CPU.Zflag = 0;
+}
+
+function updateCPUDisplay()
+{
+	var elems = document.getElementsByName("cpuData");
+	elems[0].innerHTML = formatInHex(_CPU.PC, 4);
+	elems[1].innerHTML = _CPU.Acc;
+	elems[2].innerHTML = _CPU.Xreg;
+	elems[3].innerHTML = _CPU.Yreg;
+	elems[4].innerHTML = _CPU.Zflag;
+}
+function updatePCBDisplay()
+{
+	var elems = document.getElementsByName("pcbData");
+	var state = "";
+	switch (_CurrentProcess.state){
+		case 0:
+			state = "PROCESS_NEW";
+			break;
+		case 1:
+			state = "PROCESS_LOADED";
+			break;
+		case 2:
+			state = "PROCESS_READY";
+			break;
+		case 3:
+			state = "PROCESS_RUNNING";
+			break;
+		case 4:
+			state = "PROCESS_TERMINATED";
+			break;
+	}
+	elems[0].innerHTML = state;
+	elems[1].innerHTML = _CurrentProcess.pid;
+	elems[2].innerHTML = _CurrentProcess.base;
+	elems[3].innerHTML = _CurrentProcess.limit;
+	elems[4].innerHTML = _CurrentProcess.slot;
+}
+
