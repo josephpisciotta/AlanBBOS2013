@@ -14,17 +14,39 @@
 var APP_NAME = "jOS F";  // 'cause I was at a loss for a better name.
 var APP_VERSION = "1.00";   // What did you expect?
 
-var CPU_CLOCK_INTERVAL = 100;   // This is in ms, or milliseconds, so 1000 = 1 second.
+var CPU_CLOCK_INTERVAL = 1;   // This is in ms, or milliseconds, so 1000 = 1 second.
 
 var TIMER_IRQ = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
                     // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ = 1;  
 
+var TOTAL_MEMORY = 768;
+var MEM_BLOCK_SIZE = 255;
+
+// PCB States
+var PROCESS_NEW 		= 0; // Process newly created
+var PROCESS_LOADED   	= 1; // Process loaded in memory
+var PROCESS_READY		= 2; // Process added to ready queue awaiting execution
+var PROCESS_RUNNING 	= 3; // Process currently executing
+var PROCESS_TERMINATED 	= 4; // Process finished executing
 
 //
 // Global Variables
 //
+var _PID = 0;
+
 var _CPU = null;
+
+var _Memory = null;
+
+var _MemoryManager = null;
+
+var _CurrentProcess = null;
+
+
+var _ProcessList = null;
+
+var _MemoryTableCells = null;
 
 var _OSclock = 0;       // Page 23.
 

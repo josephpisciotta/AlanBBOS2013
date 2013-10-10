@@ -88,6 +88,13 @@ function shellInit() {
     sc.function = shellLoad;
     this.commandList[this.commandList.length] = sc;
     
+    // run
+    sc = new ShellCommand();
+    sc.command = "run";
+    sc.description = "<pid> - Run process from pid in memory.";
+    sc.function = shellRun;
+    this.commandList[this.commandList.length] = sc;
+    
     // whereami
     sc = new ShellCommand();
     sc.command = "whereami";
@@ -109,10 +116,18 @@ function shellInit() {
     sc.function = shellStatus;
     this.commandList[this.commandList.length] = sc;
 
+	// background
 	sc = new ShellCommand();
     sc.command = "shellbg";
     sc.description = "<string> - Sets the background color of the Shell. Input HEX color eg. 00FF00";
     sc.function = shellBackgroundColor;
+    this.commandList[this.commandList.length] = sc;
+    
+    // bsod
+	sc = new ShellCommand();
+    sc.command = "bsod";
+    sc.description = "- blue screen of death. be warned.";
+    sc.function = shellBSOD;
     this.commandList[this.commandList.length] = sc;
 
     // processes - list the running processes and their IDs
@@ -352,9 +367,22 @@ function shellMan(args)
 function shellLoad()
 {
 	var uInput = document.getElementById("taProgramInput");
+	
+	//Validation
 	var valid = /^[0-9A-F ]+$/i.test(uInput.value);
+	
+	
 	if(valid){
-		_StdIn.putText(uInput.value);
+	
+		var result = loadProgram(uInput.value);
+		if(result === -1){
+			_StdIn.putText("Can only hold one process at this time.");
+		}
+		else{
+			_StdIn.putText("Process created with ID: " + result);
+			_CurrentProcess = _ProcessList[result];
+		}
+		
 	}
 	else{
 		_StdIn.putText("Invalid Input.");
@@ -394,6 +422,20 @@ function shellTrace(args)
     {
         _StdIn.putText("Usage: trace <on | off>");
     }
+}
+
+function shellRun(args)
+{
+	_CurrentProcess = _ProcessList[args[0]];
+	
+	_CurrentProcess.state = PROCESS_RUNNING;
+	
+	clearCPU();
+	_CPU.isExecuting = true;
+	delete _ProcessList[args[0]];
+	
+	
+	
 }
 
 function shellRot13(args)
@@ -459,4 +501,8 @@ function shellBackgroundColor(args){
         _StdIn.putText("Usage: shellbg <color> in HEX with lowercase letters eg. 00ff00");
     }
 	
+}
+function shellBSOD()
+{
+	krnTrapBSOD();
 }

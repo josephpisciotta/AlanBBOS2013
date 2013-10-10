@@ -3,7 +3,7 @@
 <head>
    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
    <meta name="author"             content="Alan G. Labouseur" />
-   <link rel="stylesheet" href="alanbbos.css" type="text/css" media="screen" />
+   <link rel="stylesheet" href="josf.css" type="text/css" media="screen" />
    <title>
       jOS F - a Browser-based virtual Operating System
    </title>
@@ -14,6 +14,8 @@
    <!-- Host (Hardware Simulation) Routines -->
    <script type="text/javascript" src="scripts/host/control.js"></script>
    <script type="text/javascript" src="scripts/host/devices.js"></script>
+   <script type="text/javascript" src="scripts/host/memory.js"></script>
+   <script type="text/javascript" src="scripts/host/virtualServices.js"></script>
    <script type="text/javascript" src="scripts/host/cpu.js"></script>
 
    <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
@@ -23,6 +25,9 @@
    <script type="text/javascript" src="scripts/os/deviceDriver.js"></script>
    <script type="text/javascript" src="scripts/os/deviceDriverKeyboard.js"></script>
    <script type="text/javascript" src="scripts/os/queue.js"></script>
+   <script type="text/javascript" src="scripts/os/pcb.js"></script>
+   <script type="text/javascript" src="scripts/os/memoryManager.js"></script>
+   <script type="text/javascript" src="scripts/os/programLoader.js"></script>
    <script type="text/javascript" src="scripts/os/shell.js"></script>
    <script type="text/javascript" src="scripts/os/kernel.js"></script>
 
@@ -33,9 +38,12 @@
 
 <body onload="hostInit();">
 
-<div id="divMain" style="width:100%;">
+<table id="divMain" style="width:100%;">
 
-   <div id="divButtonBar" style="margin:4px;">
+   <tr>
+   	<td width="400px">
+   	</td>
+   	<td id="divButtonBar" style="margin:4px;">
       <input type="button"
              id = "btnStartOS"
              name="brnStartOS"
@@ -61,17 +69,68 @@
              value="Reset"
              tabindex="2"
              onclick="hostBtnReset_click(this);">
-   </div>
+	</td>
 
-   <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">
+   </tr>
+
+   <tr id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">
+   	<td>
+			   <div id="divMemDisplay" style="">
+			   		<table id="memTable">
+			   		</table>
+			   </div>
+			   <div id="divCPUDisplay">
+				   <table id="cpuTable">
+				   		<tr align="center">
+				   			<th colspan="5">
+				   			CPU
+				   			</th>
+				   		</tr>
+				   		<th>PC</th>
+				   		<th>ACC</th>
+				   		<th>X</th>
+				   		<th>Y</th>
+				   		<th>Z</th>
+				   		<tr id="cpuData">
+				   			<td name="cpuData"></td>
+				   			<td name="cpuData"></td>
+				   			<td name="cpuData"></td>
+				   			<td name="cpuData"></td>
+				   			<td name="cpuData"></td>
+				   		</tr>
+				   </table>
+			</div>
+			<div id="divPCBDisplay">
+				   <table id="pcbTable">
+				   		<tr align="center">
+				   			<th colspan="5">
+				   			PCB
+				   			</th>
+				   		</tr>
+				   		<th>State</th>
+				   		<th>Pid</th>
+				   		<th>Base</th>
+				   		<th>Limit</th>
+				   		<th>Slot</th>
+				   		<tr id="pcbData">
+				   			<td name="pcbData"></td>
+				   			<td name="pcbData"></td>
+				   			<td name="pcbData"></td>
+				   			<td name="pcbData"></td>
+				   			<td name="pcbData"></td>
+				   		</tr>
+				   </table>
+			</div>
+	</td>
+   	<td rowspan="2">
       <canvas id="display"
               width="500px"
               height="500px"
               tabindex="3">
       </canvas>
-   </div>
-
-   <div id="divLog" style="margin-left:520px;">
+   	</td>
+   	<td>
+   	<div id="divLog" style="">
       <label>
          Log
          <br>
@@ -81,9 +140,8 @@
                    cols="48"
          ></textarea>
       </label>
-   </div>
-
-   <div id="divUserProgramInput" style="margin-left:520px;">
+   	</div>
+   	<div id="divUserProgramInput" style="">
       <label>
          User Program Input
          <br>
@@ -93,9 +151,14 @@
                    cols="48"
          ></textarea>
       </label>
-   </div>
+	</td>
+	
+   </tr>
 
-</div>
+   
+   
+
+</table>
 
 <p class="footerText" style="clear:both;">
    <br>

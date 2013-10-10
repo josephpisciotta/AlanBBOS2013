@@ -203,7 +203,7 @@ function krnKbdDispatchKeyPress(params)
     else
 	{
         // throw an error but do not kill the OS
-        krnTrapError("Invalid Key Entry");
+        hostLog("OS ERROR - INVALID KEYPRESS");
 
     }
 }
