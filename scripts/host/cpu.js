@@ -36,3 +36,9 @@ function Cpu() {
         // Do the real work here. Be sure to set this.isExecuting appropriately.
     };
 }
+
+
+function getCurrentPID()
+{
+	return _PID++;
+}

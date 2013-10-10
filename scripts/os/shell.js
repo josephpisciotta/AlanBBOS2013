@@ -352,9 +352,21 @@ function shellMan(args)
 function shellLoad()
 {
 	var uInput = document.getElementById("taProgramInput");
+	
+	//Validation
 	var valid = /^[0-9A-F ]+$/i.test(uInput.value);
+	
+	
 	if(valid){
-		_StdIn.putText(uInput.value);
+	
+		var result = loadProgram(uInput.value);
+		if(result === -1){
+			_StdIn.putText("Can only hold one process at this time.");
+		}
+		else{
+			_StdIn.putText("Process created with ID: " + result);
+		}
+		
 	}
 	else{
 		_StdIn.putText("Invalid Input.");

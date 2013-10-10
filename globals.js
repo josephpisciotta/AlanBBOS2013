@@ -23,12 +23,26 @@ var KEYBOARD_IRQ = 1;
 var TOTAL_MEMORY = 768;
 var MEM_BLOCK_SIZE = 255;
 
+// PCB States
+var PROCESS_NEW 		= 0; // Process newly created
+var PROCESS_LOADED   	= 1; // Process loaded in memory
+var PROCESS_READY		= 2; // Process added to ready queue awaiting execution
+var PROCESS_RUNNING 	= 3; // Process currently executing
+var PROCESS_TERMINATED 	= 4; // Process finished executing
+
 //
 // Global Variables
 //
+var _PID = 0;
+
 var _CPU = null;
 
 var _Memory = null;
+
+var _MemoryManager = null;
+
+
+var _ProcessList = null;
 
 var _MemoryTableCells = null;
 
