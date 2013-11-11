@@ -97,6 +97,8 @@ function hostBtnStartOS_click(btn)
     
     _ProcessList = new Array();
     
+    _ReadyQueue = new Queue();
+    
     // ... Create and initialize the CPU ...
     _CPU = new Cpu();
     _CPU.init();

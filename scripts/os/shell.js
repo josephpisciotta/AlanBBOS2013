@@ -95,6 +95,13 @@ function shellInit() {
     sc.function = shellRun;
     this.commandList[this.commandList.length] = sc;
     
+    // runall
+    sc = new ShellCommand();
+    sc.command = "runall";
+    sc.description = "Run all processes in memory.";
+    sc.function = shellRun;
+    this.commandList[this.commandList.length] = sc;
+    
     // quantum
     sc = new ShellCommand();
     sc.command = "quantum";
@@ -387,7 +394,6 @@ function shellLoad()
 		}
 		else{
 			_StdIn.putText("Process created with ID: " + result);
-			_CurrentProcess = _ProcessList[result];
 		}
 		
 	}
@@ -429,20 +435,6 @@ function shellTrace(args)
     {
         _StdIn.putText("Usage: trace <on | off>");
     }
-}
-
-function shellRun(args)
-{
-	_CurrentProcess = _ProcessList[args[0]];
-	
-	_CurrentProcess.state = PROCESS_RUNNING;
-	
-	clearCPU();
-	_CPU.isExecuting = true;
-	delete _ProcessList[args[0]];
-	
-	
-	
 }
 
 function shellRot13(args)
@@ -499,7 +491,7 @@ function shellKrnTrapErrorTest(){
 }
 
 function shellBackgroundColor(args){
- if (args.length > 0)
+ 	if (args.length > 0)
     {
         _Canvas.style.backgroundColor= "#" + args[0];
     }
@@ -516,6 +508,7 @@ function shellBSOD()
 	krnTrapBSOD();
 }
 
+// Shell quantum
 function shellQuantum(args)
 {
 	var parsed = parseInt(args[0]);
@@ -528,4 +521,42 @@ function shellQuantum(args)
 	else
 		_StdIn.putText("Usage: quantum <integer>. ");
 		_StdIn.putText("Current quantum is "+_UsedQuantum+".")
+}
+
+function shellRun(args)
+{
+	_CurrentProcess = _ProcessList[args[0]];
+	
+	_CurrentProcess.state = PROCESS_RUNNING;
+	
+	clearCPU();
+	_CPU.isExecuting = true;
+	delete _ProcessList[args[0]];
+	
+	
+	
+}
+
+// run all processes
+function shellRunall()
+{
+	var process = null;
+	
+	// load processes into _ReadyQueue in a fcfs manner
+	for (i in _ProcessList){
+		process = _ProcessList[i];
+		
+		//remove it from process list
+		delete _ProcessList[i];
+		
+		_ReadyQueue.enqueue(process);
+	}
+	
+	_CurrentProcess = _ReadyQueue.dequeue();
+	_CurrentProcess.state = PROCESS_RUNNING;
+	
+	clearCPU();
+	_CPU.isExecuting = true;
+	
+	
 }

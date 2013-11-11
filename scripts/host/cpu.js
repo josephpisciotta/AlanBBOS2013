@@ -31,8 +31,13 @@ function Cpu() {
     };
     
     this.cycle = function() {
+    	if(_Scheduler  != null){
+	    	if(_CycleCount > _UsedQuantum)
+	    		_Scheduler.contextSwitch();
+    	}
     	this.execute( this.fetch() );
         krnTrace("CPU cycle");
+        _CycleCount++;
         updateCPUDisplay();
         
     };

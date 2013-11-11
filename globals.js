@@ -53,11 +53,15 @@ var _ReadyQueue = null;
 
 var _ProcessList = null;
 
+var _Scheduler = null;
+
+var _CycleCount = 1;
+
 var _MemoryTableCells = null;
 
 var _OSclock = 0;       // Page 23.
 
-var _Mode = 0;   // 0 = Kernel Mode, 1 = User Mode.  See page 21.
+var _Mode = 1;   // 0 = Kernel Mode, 1 = User Mode.  See page 21.
 
 var _Canvas = null;               // Initialized in hostInit().
 var _TaskbarCanvas = null;        // Initialized in hostInit().
