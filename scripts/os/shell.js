@@ -99,7 +99,7 @@ function shellInit() {
     sc = new ShellCommand();
     sc.command = "runall";
     sc.description = "Run all processes in memory.";
-    sc.function = shellRun;
+    sc.function = shellRunAll;
     this.commandList[this.commandList.length] = sc;
     
     // quantum
