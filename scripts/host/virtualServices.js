@@ -102,6 +102,55 @@ function updateCPUDisplay()
 	elems[3].innerHTML = _CPU.Yreg;
 	elems[4].innerHTML = _CPU.Zflag;
 }
+
+function updateReadyQueueDisplay()
+{
+	var size = _ReadyQueue.getSize();
+	clearReadyQueueDisplay();
+	var process = null;
+	if(size > 0 ){
+		for(var i = 0; i < size; i++){
+			var elems = document.getElementsByName("rq"+(i+1)+"Data");
+			var state = "";
+			switch (_ReadyQueue.q[i].state){
+				case 0:
+					state = "PROCESS_NEW";
+					break;
+				case 1:
+					state = "PROCESS_LOADED";
+					break;
+				case 2:
+					state = "PROCESS_READY";
+					break;
+				case 3:
+					state = "PROCESS_RUNNING";
+					break;
+				case 4:
+					state = "PROCESS_TERMINATED";
+					break;
+			}
+			elems[0].innerHTML = _ReadyQueue.q[i].pid;
+			elems[1].innerHTML = state;
+			elems[2].innerHTML = formatInHex(_ReadyQueue.q[i].base, 4);
+			elems[3].innerHTML = formatInHex(_ReadyQueue.q[i].limit, 4);
+		}
+
+	}
+	
+}
+function clearReadyQueueDisplay()
+{	
+		for(var i = 0; i < 3; i++){
+			var elems = document.getElementsByName("rq"+(i+1)+"Data");
+			elems[0].innerHTML = "&nbsp;";
+			elems[1].innerHTML = "&nbsp;";
+			elems[2].innerHTML = "&nbsp;";
+			elems[3].innerHTML = "&nbsp;";
+		}
+
+	
+}
+
 function updatePCBDisplay()
 {
 	var elems = document.getElementsByName("pcbData");

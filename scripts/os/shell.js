@@ -109,6 +109,20 @@ function shellInit() {
     sc.function = shellQuantum;
     this.commandList[this.commandList.length] = sc;
     
+    // ps
+    sc = new ShellCommand();
+    sc.command = "ps";
+    sc.description = "- Displays the current processes.";
+    sc.function = shellProcesses;
+    this.commandList[this.commandList.length] = sc;
+    
+    // kill
+    sc = new ShellCommand();
+    sc.command = "ps";
+    sc.description = "- Displays the current processes.";
+    sc.function = shellKill;
+    this.commandList[this.commandList.length] = sc;
+    
     // whereami
     sc = new ShellCommand();
     sc.command = "whereami";
@@ -566,3 +580,23 @@ function shellRunAll()
 	else
 		_StdIn.putText("No loaded processes to run.")
 }
+
+function shellProcesses(){
+	var num = _ProcessList.length;
+	if (num === 0){
+		_StdIn.putText("No current processes.");
+	}
+	else{
+		_StdIn.putText("Processes (pid): ");
+
+		for(i in _ProcessList){
+			_StdIn.putText(_ProcessList[i].pid.toString() + " ");
+
+		}
+	}
+}
+
+function shellKill(){
+	
+}
+

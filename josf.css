@@ -51,7 +51,7 @@ h3 {
 }
 #divMemDisplay {
 	width:400px;
-	height:400px;
+	height:300px;
 	overflow:scroll;
 }
 #memTable {
@@ -67,5 +67,11 @@ h3 {
 #pcbTable{
 	background:#999;
 	margin-top: 5px;
+	width:400px;
+}
+#rqTable{
+	background:#999;
+	margin-top: 5px;
+	height: 100px;
 	width:400px;
 }

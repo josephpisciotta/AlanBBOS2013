@@ -45,6 +45,8 @@ function Cpu() {
         krnTrace("CPU cycle");
         _CycleCount++;
         updateCPUDisplay();
+        updateReadyQueueDisplay();
+
         
     };
     this.fetch = function()
