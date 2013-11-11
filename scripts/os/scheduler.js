@@ -1,3 +1,9 @@
+/*
+	Scheduler.js
+	
+	Process scheduler
+*/
+
 function Scheduler()
 {
 	this.contextSwitch = function(){
