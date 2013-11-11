@@ -37,7 +37,7 @@ var PROCESS_TERMINATED 	= 4; // Process finished executing
 //
 // Global Variables
 //
-var _CurQuantum = DEFAULT_QUANTUM; // Currently Being used quantum
+var _UsedQuantum = DEFAULT_QUANTUM; // Currently Being used quantum
 
 var _PID = 0;
 

@@ -95,6 +95,13 @@ function shellInit() {
     sc.function = shellRun;
     this.commandList[this.commandList.length] = sc;
     
+    // quantum
+    sc = new ShellCommand();
+    sc.command = "quantum";
+    sc.description = "<int> - choose the Round Robin quantum.";
+    sc.function = shellQuantum;
+    this.commandList[this.commandList.length] = sc;
+    
     // whereami
     sc = new ShellCommand();
     sc.command = "whereami";
@@ -502,7 +509,23 @@ function shellBackgroundColor(args){
     }
 	
 }
+
+// Blue screen of death
 function shellBSOD()
 {
 	krnTrapBSOD();
+}
+
+function shellQuantum(args)
+{
+	var parsed = parseInt(args[0]);
+	console.log(parsed);
+	
+	if(parsed % 1 === 0){
+		_UsedQuantum = parsed;
+		_StdIn.putText("The quantum is now "+parsed+".");
+	}
+	else
+		_StdIn.putText("Usage: quantum <integer>. ");
+		_StdIn.putText("Current quantum is "+_UsedQuantum+".")
 }
