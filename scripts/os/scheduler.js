@@ -5,7 +5,7 @@ function Scheduler()
 			hostLog("\nContext Switch...\n","OS");
 			
 			// Mode = kernel
-			_Mode = 0;
+			_KernelInterruptQueue.enqueue( new Interrupt(ModeSwitch, [0]) );	
 			
 			// Update current PCB and add it back into the queue
 			if(_CurrentProcess.state != PROCESS_TERMINATED){
@@ -24,7 +24,7 @@ function Scheduler()
 			
 			hostLog("\nContext Switch...\n","OS");
 			// Mode = user
-			_Mode = 1;
+			_KernelInterruptQueue.enqueue( new Interrupt(ModeSwitch, [1]) );	
 			
 		}	
 		// Always reset Cycle count
