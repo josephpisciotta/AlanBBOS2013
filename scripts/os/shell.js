@@ -118,8 +118,8 @@ function shellInit() {
     
     // kill
     sc = new ShellCommand();
-    sc.command = "ps";
-    sc.description = "- Displays the current processes.";
+    sc.command = "kill";
+    sc.description = "- <pid> Kills the given process.";
     sc.function = shellKill;
     this.commandList[this.commandList.length] = sc;
     
@@ -596,7 +596,26 @@ function shellProcesses(){
 	}
 }
 
-function shellKill(){
-	
+function shellKill(args){
+	if(args[0] % 1 === 0){
+		var pid = parseInt(args[0]);
+		
+		var tmp_proc = null;
+		var tmp_slot = 0;
+		
+		var queue = _ReadyQueue.q;
+		
+		for(i in queue){
+			if(_ReadyQueue.q[i].pid === pid){
+				tmp_proc = _ReadyQueue.q[i];
+				tmp_slot = tmp_proc.slot;
+				_ReadyQueue.q[i].state = PROCESS_TERMINATED;
+				
+				_StdIn.putText("Terminated.");
+			}
+		}
+	}
+	else
+		_StdIn.putText("Please give a pid.");
 }
 
