@@ -40,18 +40,22 @@ h3 {
 	width: 100px;
 }
 
-.footerText {
+#footerText {
    color: black;
    font-family: Arial, Helvetica, sans-serif;
-	font-size: 8pt;
+	 font-size: 8pt;
    text-align: center;
+   display: block;
+   position:fixed;
+   bottom: 100px;
+   left: 400px;
 }
 #divMain{
 	margin-bottom: 30px;
 }
 #divMemDisplay {
 	width:400px;
-	height:300px;
+	height:250px;
 	overflow:scroll;
 }
 #memTable {
