@@ -538,25 +538,31 @@ function shellRun(args)
 }
 
 // run all processes
-function shellRunall()
+function shellRunAll()
 {
-	var process = null;
+	if(_ProcessList != null){
+		
 	
-	// load processes into _ReadyQueue in a fcfs manner
-	for (i in _ProcessList){
-		process = _ProcessList[i];
+		var process = null;
 		
-		//remove it from process list
-		delete _ProcessList[i];
+		// load processes into _ReadyQueue in a fcfs manner
+		for (i in _ProcessList){
+			process = _ProcessList[i];
+			
+			//remove it from process list
+			delete _ProcessList[i];
+			
+			_ReadyQueue.enqueue(process);
+		}
 		
-		_ReadyQueue.enqueue(process);
+		_CurrentProcess = _ReadyQueue.dequeue();
+		
+		_CurrentProcess.state = PROCESS_RUNNING;
+		
+		clearCPU();
+		_CPU.isExecuting = true;
+	
 	}
-	
-	_CurrentProcess = _ReadyQueue.dequeue();
-	_CurrentProcess.state = PROCESS_RUNNING;
-	
-	clearCPU();
-	_CPU.isExecuting = true;
-	
-	
+	else
+		_StdIn.putText("No loaded processes to run.")
 }

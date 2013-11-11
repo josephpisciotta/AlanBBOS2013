@@ -2,7 +2,7 @@ function Scheduler()
 {
 	this.contextSwitch = function(){
 		if(_ReadyQueue.peek()){
-			log("\nContext Switch...\n");
+			hostLog("\nContext Switch...\n","OS");
 			
 			// Mode = kernel
 			_Mode = 0;
@@ -19,12 +19,14 @@ function Scheduler()
 			// Update CPU
 			_CPU.update(_CurrentProcess.pc, _CurrentProcess.acc, _CurrentProcess.x, _CurrentProcess.y, _CurrentProcess.z);
 			
+			
+			hostLog("\nContext Switch...\n","OS");
 			// Mode = user
 			_Mode = 1;
 			
-			
-			// Always reset Cycle count
-			_CycleCount = 1; 
-		}
+		}	
+		// Always reset Cycle count
+		_CycleCount = 1; 
+		
 	}
 }

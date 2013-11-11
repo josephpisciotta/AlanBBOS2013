@@ -106,7 +106,7 @@ function MemoryManager()
 
 	}
 	
-	// Return memory from slot one
+	// Return memory from slot
 	this.getMemoryContentFromSlot = function(slotNum)
 	{
 		if(slotNum <= 3 && slotNum){

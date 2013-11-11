@@ -34,6 +34,14 @@ function Queue()
         return retVal;        
     };
     
+    this.peek = function(){
+	    if(this.q.length>0){
+		   return (this.q[0]);
+	    }
+	    else
+	    	return undefined;
+    }
+    
     this.toString = function() {
         var retVal = "";
         for (var i in this.q)

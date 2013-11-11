@@ -29,12 +29,18 @@ function Cpu() {
         this.Zflag = 0;      
         this.isExecuting = false;  
     };
+    this.update = function(pc,acc,x,y,z) {
+        this.PC    = pc;
+        this.Acc   = acc;
+        this.Xreg  = x;
+        this.Yreg  = y;
+        this.Zflag = z;      
+    };
     
     this.cycle = function() {
-    	if(_Scheduler  != null){
-	    	if(_CycleCount > _UsedQuantum)
-	    		_Scheduler.contextSwitch();
-    	}
+	    if(_CycleCount > _UsedQuantum)
+	    	_Scheduler.contextSwitch();
+	    		
     	this.execute( this.fetch() );
         krnTrace("CPU cycle");
         _CycleCount++;
@@ -275,7 +281,12 @@ function sysBreak()
 	_CurrentProcess.update(PROCESS_TERMINATED, _CPU.PC, _CPU.Acc, _CPU.Xreg, _CPU.Yreg, _CPU.Zflag);
 	_MemoryManager.toggleSlotStatus(_CurrentProcess.slot);
 	
-	_CPU.isExecuting = false;
+	if(_ReadyQueue.peek()){
+		_Scheduler.contextSwitch();
+	}
+	else{
+		_CPU.isExecuting = false;
+	}
 }
 
 // EC
