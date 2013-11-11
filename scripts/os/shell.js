@@ -376,7 +376,7 @@ function shellLoad()
 	
 		var result = loadProgram(uInput.value);
 		if(result === -1){
-			_StdIn.putText("Can only hold one process at this time.");
+			_StdIn.putText("Can only hold 3 processes at this time.");
 		}
 		else{
 			_StdIn.putText("Process created with ID: " + result);

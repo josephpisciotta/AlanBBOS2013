@@ -4,13 +4,27 @@
 
 function MemoryManager()
 {	
-	this.memoryMap = {
+	this.memorySlots = {
 		slotOne: 
 		{
-			open  : true,
+			available  : true,
 			base  : 0,
-			limit : 755,
+			limit : 255,
 			slotNumber : 1
+		},
+		slotTwo:
+		{
+			available  	: true,
+			base  		: 256,
+			limit 		: 511,
+			slotNumber	: 2
+		},
+		slotThree:
+		{
+			available	: true,
+			base		: 512,
+			limit		: 767,
+			slotNumber	: 3
 		}
 	};
 	
@@ -42,63 +56,88 @@ function MemoryManager()
 		return ( address >= base && address <= limit );
 	}
 	
-	// returns whether the slot is open
+	// returns whether the slot is available
 	this.openSlotExists = function()
 	{
-		var slotOneStatus   = this.memoryMap.slotOne.open;
-	
-		return ( slotOneStatus );
+		return ( this.memorySlots.slotOne.available || this.memorySlots.slotTwo.available || this.memorySlots.slotThree.available );
 	}
 	
 	// return the slot if it is open
 	this.getOpenSlot = function()
 	{
-		var internalName = "slotOne";
-		if( _MemoryManager.memoryMap[internalName].open == true )
-		{
-			return( _MemoryManager.memoryMap[internalName] );
+		var internalName = new Array("slotOne", "slotTwo", "slotThree");
+		
+		for (var i = 0; i < internalName.length; i++){
+			if( this.memorySlots[internalName[i]].available === true )
+			{
+				return( this.memorySlots[internalName[i]] );
+			}
 		}
+		
 
 		return null;
 	}
 
 	// Assigns the memory map's slot open properties to true/false 
-	this.toggleSlotStatus = function()
+	this.toggleSlotStatus = function(slotNum)
 	{
-
-			var slotOneStatus   = this.memoryMap.slotOne.open;
-
-
-			slotOneStatus = slotOneStatus ? false : true;
-			this.memoryMap.slotOne.open = slotOneStatus; // Assign correct status 
+		// Make sure slotNum is between 1 and three
+		if(slotNum <= 3 && slotNum){
+			var slot_statuses = {
+									"1":this.memorySlots.slotOne.available,
+									"2":this.memorySlots.slotTwo.available,
+									"3":this.memorySlots.slotThree.available
+								}
+						
+			if(slot_statuses[""+slotNum+""] == true)
+				slot_statuses[""+slotNum+""] = false;
+			else
+				slot_statuses[""+slotNum+""] = true;
+				
+				
+			// Update all statuses	
+			this.memorySlots.slotOne.available = slot_statuses["1"];
+			this.memorySlots.slotTwo.available = slot_statuses["2"];
+			this.memorySlots.slotThree.available = slot_statuses["3"];
+		}
+		else{
+			
+		}
 
 	}
 	
 	// Return memory from slot one
-	this.getMemoryContentFromSlot = function()
+	this.getMemoryContentFromSlot = function(slotNum)
 	{
-		var base = -1;
-		var limit = -1;
-		var opcodeArray = [];
-		
-
-		base  = _MemoryManager.memoryMap.slotOne.base;
-		limit = _MemoryManager.memoryMap.slotOne.limit;
-
-		
-		for(var i = base; i <= limit; i++)
-		{
-			opcodeArray.push(_Memory[i]);
+		if(slotNum <= 3 && slotNum){
+			var base = -1;
+			var limit = -1;
+			var opcodeArray = [];
+			
+			var internalName = {"1":"slotOne", "2":"slotTwo", "3":"slotThree"};
+			
+			base  = this.memorySlots[internalName[""+slotNum+""]].base;
+			limit = this.memorySlots[internalName[""+slotNum+""]].limit;
+	
+			
+			for(var i = base; i <= limit; i++)
+			{
+				opcodeArray.push(_Memory[i]);
+			}
+			
+			return opcodeArray;
 		}
-		
-		return opcodeArray;
+		else{
+			// Error
+			return [];
+		}
 	}
 	
-	// clear slot one
-	this.clearMemorySlot = function()
+	// clear slot 
+	this.clearMemorySlot = function(slotNum)
 	{
-
-		for( var i = _MemoryManager.memoryMap.slotOne.base; i < _MemoryManager.memoryMap.slotOne.limit; i++)
+		var internalName = {"1":"slotOne", "2":"slotTwo", "3":"slotThree"};
+		for( var i = this.memorySlots[internalName[""+slotNum+""]].base; i < this.memorySlots[internalName[""+slotNum+""]].limit; i++)
 		{
 			_Memory[i] = "00";
 		}
@@ -107,9 +146,10 @@ function MemoryManager()
 	}
 	
 	// add byte to memory at position with offset if needed
-	this.addByte = function(data, position, offset)
+	this.addByte = function(data, position, proc)
 	{
-		console.log(offset);
-		_Memory[position + offset] = data;
+			
+		console.log(proc.base);
+		_Memory[position + proc.base] = data;
 	}
 }

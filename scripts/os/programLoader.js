@@ -18,14 +18,14 @@ function loadProgram(code)
 	{
 		var process = createProcessControlBlock();
 		
-		_MemoryManager.clearMemorySlot();
+		_MemoryManager.clearMemorySlot(process.slot);
 		
 		var opcode = "";
 		
 		console.log(process.base);
 		for( var i = 0; i < opcodes.length; i++ ){
 			opcode = opcodes[i];
-			_MemoryManager.addByte(opcode.toUpperCase(), i, process.base);
+			_MemoryManager.addByte(opcode.toUpperCase(), i, process);
 		}
 		
 		process.state = PROCESS_LOADED;

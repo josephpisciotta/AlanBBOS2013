@@ -42,7 +42,7 @@ function createProcessControlBlock()
 	var memorySlot = _MemoryManager.getOpenSlot();
 	
 	// deem memory taken
-	_MemoryManager.toggleSlotStatus();
+	_MemoryManager.toggleSlotStatus(memorySlot.slotNumber);
 	var base = memorySlot.base;
 	var limit = memorySlot.limit;
 	var slot = memorySlot.slotNumber;
