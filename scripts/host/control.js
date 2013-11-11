@@ -97,11 +97,13 @@ function hostBtnStartOS_click(btn)
     
     _ProcessList = new Array();
     
+    _ReadyQueue = new Queue();
+    
     // ... Create and initialize the CPU ...
     _CPU = new Cpu();
     _CPU.init();
     
-    
+    _Scheduler = new Scheduler();
 
     // ... then set the host clock pulse ...
     _hardwareClockID = setInterval(hostClockPulse, CPU_CLOCK_INTERVAL);

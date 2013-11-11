@@ -25,6 +25,15 @@ function Queue()
         this.q.push(element);        
     };
     
+    this.getItem = function(index) {
+	  	var elem = this.q[index];
+	  	if(elem){
+		  	return elem.object;
+	  	}
+	  	else
+	  		return undefined;
+    };
+    
     this.dequeue = function() {
         var retVal = null;
         if (this.q.length > 0)
@@ -33,6 +42,14 @@ function Queue()
         }
         return retVal;        
     };
+    
+    this.peek = function(){
+	    if(this.q.length>0){
+		   return (this.q[0]);
+	    }
+	    else
+	    	return undefined;
+    }
     
     this.toString = function() {
         var retVal = "";

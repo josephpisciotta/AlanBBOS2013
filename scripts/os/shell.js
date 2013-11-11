@@ -95,6 +95,34 @@ function shellInit() {
     sc.function = shellRun;
     this.commandList[this.commandList.length] = sc;
     
+    // runall
+    sc = new ShellCommand();
+    sc.command = "runall";
+    sc.description = "Run all processes in memory.";
+    sc.function = shellRunAll;
+    this.commandList[this.commandList.length] = sc;
+    
+    // quantum
+    sc = new ShellCommand();
+    sc.command = "quantum";
+    sc.description = "<int> - choose the Round Robin quantum.";
+    sc.function = shellQuantum;
+    this.commandList[this.commandList.length] = sc;
+    
+    // ps
+    sc = new ShellCommand();
+    sc.command = "ps";
+    sc.description = "- Displays the current processes.";
+    sc.function = shellProcesses;
+    this.commandList[this.commandList.length] = sc;
+    
+    // kill
+    sc = new ShellCommand();
+    sc.command = "kill";
+    sc.description = "- <pid> Kills the given process.";
+    sc.function = shellKill;
+    this.commandList[this.commandList.length] = sc;
+    
     // whereami
     sc = new ShellCommand();
     sc.command = "whereami";
@@ -376,11 +404,10 @@ function shellLoad()
 	
 		var result = loadProgram(uInput.value);
 		if(result === -1){
-			_StdIn.putText("Can only hold one process at this time.");
+			_StdIn.putText("Can only hold 3 processes at this time.");
 		}
 		else{
 			_StdIn.putText("Process created with ID: " + result);
-			_CurrentProcess = _ProcessList[result];
 		}
 		
 	}
@@ -422,20 +449,6 @@ function shellTrace(args)
     {
         _StdIn.putText("Usage: trace <on | off>");
     }
-}
-
-function shellRun(args)
-{
-	_CurrentProcess = _ProcessList[args[0]];
-	
-	_CurrentProcess.state = PROCESS_RUNNING;
-	
-	clearCPU();
-	_CPU.isExecuting = true;
-	delete _ProcessList[args[0]];
-	
-	
-	
 }
 
 function shellRot13(args)
@@ -492,7 +505,7 @@ function shellKrnTrapErrorTest(){
 }
 
 function shellBackgroundColor(args){
- if (args.length > 0)
+ 	if (args.length > 0)
     {
         _Canvas.style.backgroundColor= "#" + args[0];
     }
@@ -502,7 +515,107 @@ function shellBackgroundColor(args){
     }
 	
 }
+
+// Blue screen of death
 function shellBSOD()
 {
 	krnTrapBSOD();
 }
+
+// Shell quantum
+function shellQuantum(args)
+{
+	var parsed = parseInt(args[0]);
+	console.log(parsed);
+	
+	if(parsed % 1 === 0){
+		_UsedQuantum = parsed;
+		_StdIn.putText("The quantum is now "+parsed+".");
+	}
+	else
+		_StdIn.putText("Usage: quantum <integer>. ");
+		_StdIn.putText("Current quantum is "+_UsedQuantum+".")
+}
+
+function shellRun(args)
+{
+	_CurrentProcess = _ProcessList[args[0]];
+	
+	_CurrentProcess.state = PROCESS_RUNNING;
+	
+	clearCPU();
+	_CPU.isExecuting = true;
+	delete _ProcessList[args[0]];
+	
+	
+	
+}
+
+// run all processes
+function shellRunAll()
+{
+	if(_ProcessList != null){
+		
+	
+		var process = null;
+		
+		// load processes into _ReadyQueue in a fcfs manner
+		for (i in _ProcessList){
+			process = _ProcessList[i];
+			
+			//remove it from process list
+			delete _ProcessList[i];
+			
+			_ReadyQueue.enqueue(process);
+		}
+		
+		_CurrentProcess = _ReadyQueue.dequeue();
+		
+		_CurrentProcess.state = PROCESS_RUNNING;
+		
+		clearCPU();
+		_CPU.isExecuting = true;
+	
+	}
+	else
+		_StdIn.putText("No loaded processes to run.")
+}
+
+function shellProcesses(){
+	var num = _ProcessList.length;
+	if (num === 0){
+		_StdIn.putText("No current processes.");
+	}
+	else{
+		_StdIn.putText("Processes (pid): ");
+
+		for(i in _ProcessList){
+			_StdIn.putText(_ProcessList[i].pid.toString() + " ");
+
+		}
+	}
+}
+
+function shellKill(args){
+	if(args[0] % 1 === 0){
+		var pid = parseInt(args[0]);
+		
+		var tmp_proc = null;
+		var tmp_slot = 0;
+		
+		var queue = _ReadyQueue.q;
+		
+		for(i in queue){
+			if(_ReadyQueue.q[i].pid === pid){
+				tmp_proc = _ReadyQueue.q[i];
+				tmp_slot = tmp_proc.slot;
+				_ReadyQueue.q[i].state = PROCESS_TERMINATED;
+				
+				_StdIn.putText("Terminated.");
+			}
+		}
+	}
+	else
+		_StdIn.putText("Please give a pid.");
+}
+

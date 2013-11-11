@@ -14,12 +14,17 @@
 var APP_NAME = "jOS F";  // 'cause I was at a loss for a better name.
 var APP_VERSION = "1.00";   // What did you expect?
 
-var CPU_CLOCK_INTERVAL = 1;   // This is in ms, or milliseconds, so 1000 = 1 second.
+var CPU_CLOCK_INTERVAL = 100;   // This is in ms, or milliseconds, so 1000 = 1 second.
 
 var TIMER_IRQ = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
                     // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
-var KEYBOARD_IRQ = 1;  
+var KEYBOARD_IRQ = 1; 
+var ModeSwitch = 2;
 
+// Quantum for Round Robin
+var DEFAULT_QUANTUM = 6; 
+
+// Memory Defaults
 var TOTAL_MEMORY = 768;
 var MEM_BLOCK_SIZE = 255;
 
@@ -33,6 +38,8 @@ var PROCESS_TERMINATED 	= 4; // Process finished executing
 //
 // Global Variables
 //
+var _UsedQuantum = DEFAULT_QUANTUM; // Currently Being used quantum
+
 var _PID = 0;
 
 var _CPU = null;
@@ -43,14 +50,19 @@ var _MemoryManager = null;
 
 var _CurrentProcess = null;
 
+var _ReadyQueue = null;
 
 var _ProcessList = null;
+
+var _Scheduler = null;
+
+var _CycleCount = 1;
 
 var _MemoryTableCells = null;
 
 var _OSclock = 0;       // Page 23.
 
-var _Mode = 0;   // 0 = Kernel Mode, 1 = User Mode.  See page 21.
+var _Mode = 1;   // 0 = Kernel Mode, 1 = User Mode.  See page 21.
 
 var _Canvas = null;               // Initialized in hostInit().
 var _TaskbarCanvas = null;        // Initialized in hostInit().

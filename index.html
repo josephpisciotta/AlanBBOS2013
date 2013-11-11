@@ -30,6 +30,8 @@
    <script type="text/javascript" src="scripts/os/programLoader.js"></script>
    <script type="text/javascript" src="scripts/os/shell.js"></script>
    <script type="text/javascript" src="scripts/os/kernel.js"></script>
+   <script type="text/javascript" src="scripts/os/scheduler.js"></script>
+
 
    <!-- Other Routines -->
    <script type="text/javascript" src="scripts/utils.js"></script>
@@ -100,11 +102,42 @@
 				   		</tr>
 				   </table>
 			</div>
+			<div id="divReadyQueueDisplay">
+				   <table id="rqTable">
+				   		<tr align="center">
+				   			<th colspan="5">
+				   			Ready Queue
+				   			</th>
+				   		</tr>
+				   		<th>PID</th>
+				   		<th>State</th>
+				   		<th>Base</th>
+				   		<th>Limit</th>
+				   		<tr id="rq1Data">
+				   			<td name="rq1Data"></td>
+				   			<td name="rq1Data"></td>
+				   			<td name="rq1Data"></td>
+				   			<td name="rq1Data"></td>
+				   		</tr>
+				   		<tr id="rq2Data">
+				   			<td name="rq2Data"></td>
+				   			<td name="rq2Data"></td>
+				   			<td name="rq2Data"></td>
+				   			<td name="rq2Data"></td>
+				   		</tr>
+				   		<tr id="rq3Data">
+				   			<td name="rq3Data"></td>
+				   			<td name="rq3Data"></td>
+				   			<td name="rq3Data"></td>
+				   			<td name="rq3Data"></td>
+				   		</tr>
+				   </table>
+			</div>
 			<div id="divPCBDisplay">
 				   <table id="pcbTable">
 				   		<tr align="center">
 				   			<th colspan="5">
-				   			PCB
+				   			Current Process PCB
 				   			</th>
 				   		</tr>
 				   		<th>State</th>

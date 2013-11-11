@@ -82,7 +82,6 @@ function krnOnCPUClockPulse()
 	updateMemoryDisplay();
 	if(_CurrentProcess != null)
 		updatePCBDisplay();
-	   
     // Check for an interrupt, are any. Page 560
     if (_KernelInterruptQueue.getSize() > 0)    
     {
@@ -94,11 +93,14 @@ function krnOnCPUClockPulse()
     else if (_CPU.isExecuting) // If there are no interrupts then run one CPU cycle if there is anything being processed.
     {
         _CPU.cycle();
+        
     }    
     else                       // If there are no interrupts and there is nothing being executed then just be idle.
     {
     	if(_OSclock %100 === 0)
 			krnTrace("Idle");
+			
+		
     }
 }
 
@@ -138,6 +140,10 @@ function krnInterruptHandler(irq, params)    // This is the Interrupt Handler Ro
             krnKeyboardDriver.isr(params);   // Kernel mode device driver
             _StdIn.handleInput();
             break;
+        case ContextSwitch:
+        	if(params[0] === 0 || params[0] === 1)
+        		_Mode = params[0];
+        	break;
         default: 
             krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
     }
