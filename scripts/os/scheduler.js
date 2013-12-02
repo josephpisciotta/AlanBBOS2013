@@ -6,6 +6,7 @@
 
 function Scheduler()
 {
+	this.schedule = DEFAULT_SCHEDULE;
 	this.contextSwitch = function(){
 		if(_ReadyQueue.peek()){
 			hostLog("\nContext Switch...\n","OS");

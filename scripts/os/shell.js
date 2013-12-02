@@ -157,6 +157,13 @@ function shellInit() {
     sc.description = "- blue screen of death. be warned.";
     sc.function = shellBSOD;
     this.commandList[this.commandList.length] = sc;
+    
+    // bsod
+	sc = new ShellCommand();
+    sc.command = "setschedule";
+    sc.description = "<rr, fcfs, priority> - sets the scheduling algorithm of the OS";
+    sc.function = shellSetSchedule;
+    this.commandList[this.commandList.length] = sc;
 
     // processes - list the running processes and their IDs
     // kill <id> - kills the specified process id.
@@ -581,6 +588,25 @@ function shellRunAll()
 		_StdIn.putText("No loaded processes to run.")
 }
 
+function shellSetSchedule(args){
+	var input = args[0];
+	if (input === "rr"){
+		_Scheduler.schedule = "rr";
+		_StdIn.putText("Scheduling algorithm set to Round Robin.");
+	}
+	else if (input === "fcfs"){
+		_Scheduler.schedule = "fcfs";
+		_StdIn.putText("Scheduling algorithm set to First Come, First Served.");
+	}
+	else if (input === "priority"){
+		_Scheduler.schedule = "priority";
+		_StdIn.putText("Scheduling algorithm set to Priority.");
+	}
+	else{
+		_StdIn.putText("This command requires as an input either: rr, fcfs, or priority");
+	}
+}
+
 function shellProcesses(){
 	var num = _ProcessList.length;
 	if (num === 0){
@@ -595,6 +621,7 @@ function shellProcesses(){
 		}
 	}
 }
+
 
 function shellKill(args){
 	if(args[0] % 1 === 0){

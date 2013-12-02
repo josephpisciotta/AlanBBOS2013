@@ -21,6 +21,9 @@ var TIMER_IRQ = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt prio
 var KEYBOARD_IRQ = 1; 
 var ModeSwitch = 2;
 
+// Schedler Default
+var DEFAULT_SCHEDULE = "rr";
+
 // Quantum for Round Robin
 var DEFAULT_QUANTUM = 6; 
 
