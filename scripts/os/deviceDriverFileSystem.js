@@ -90,23 +90,124 @@ function krnCreate(filename){
 
 function krnWrite(filename, data){
 	var dirKey = krnGetDirectoryKeyFromName(filename);
+	
+	if (dirKey){
+		var valArray = JSON.parse(localStorage[dirKey]);
+		
+		var track = valArray[1];
+		
+		var sect = valArray[2];
+		
+		var block = valArray[3];
+		
+		var fileKey = systemKey(track,sect,block);
+		
+		if (data.length <= 60){
+			localStorage[fileKey] = fileSystemValue(1,-1,-1,-1,data);
+		}
+		else{
+			var blocksNeeded = Math.ceil(data.length/60);
+			
+			var segments = [];
+			for (var i = 0; i < blocksNeeded; i++){
+				segments[i] = data.substring((i*60), ((i + 1) *60));
+			}
+			localStorage[fileKey] = krnSetValueOccupied(NULL_TSB, segments[0]);
+			
+			var nextFileKey = fileKey;
+			
+			var curBlockKey = "";
+			
+			for (var i = 1; i < segments.length; i++){
+				curBlockKey = nextFileKey;
+				
+				nextFileKey = krnFindOpenFileBlock();
+				
+				localStorage[nextFileKey] = krnSetValueOccupied(NULL_TSB, segments[i]);
+				krnLinkSegmentToParent(curBlockKey, nextFileKey);
+			}
+			return true;
+		}
+	}
+	else{
+		return false;
+	}
+}
+
+function krnRead(filename){
+	try{
+		var dirKey = krnGetDirectoryKeyFromName(filename);
+		var valArray = JSON.parse(localStorage[dirKey]);
+		
+		var track = valArray[1];
+		var sect = valArray[2];
+		var block = valArray[3];
+		
+		var parentKey = systemKey(track,sect,block);
+		
+		var linkedFiles = krnGetLinkedFileBlocks(parentKey);
+	}
+}
+
+
+function krnLinkSegmentToParent(parent, child){
+	var valArray = JSON.parse(localStorage[parent]);
+	var data = valArray[4];
+	
+	var childArray = JSON.parse(child);
+	var track = childArray[0];
+	var sect = childArray[1];
+	var block = childArray[2];
+	
+	localStorage[parent] = systemVal(1,track,sect,block,data)
+}
+
+function krnGetDirectoryKeyFromName(filename){
+	var keyInt = 0;
+	var valArray;
+	var occupied;
+	var data;
+	var storedFilename;
+	
+	for(key in localStorage)
+	{
+		keyInt = parseKey(key);
+		
+		if( keyInt >= 0 && keyInt <= 77 )
+		{
+			valArray = JSON.parse(localStorage[key]);
+			occupied = valArray[0];
+			data = valArray[4];
+
+			if( occupied === 1 )
+			{
+				// Pull filename from the directory data
+				storedFilename = data.substring(0, data.indexOf("-"));
+				// If key is found with matching filename return that key
+				if(filename === storedFilename)
+					return key;
+			}
+		}
+	}
+	
+	// Return null if directory section is fully open or filename doesnt exist
+	return null;
 }
 
 function krnFindOpenFileBlock()
 {
 	var keyInt = 0;
-	var valueArray;
+	var valArray;
 	var occupiedBit;
 	
 	for(key in localStorage)
 	{
 		keyInt = parseKey(key);
 		
-		// Ensure we are iterating through file space only
 		if( keyInt >= 100 && keyInt <= 300)
 		{
-			valueArray = JSON.parse(localStorage[key]);
-			occupiedBit = valueArray[0];
+			valArray = JSON.parse(localStorage[key]);
+			occupiedBit = valArray[0];
 			
 			if( occupiedBit === 0 )
 			{
@@ -123,7 +224,7 @@ function krnFindOpenFileBlock()
 function krnFindOpenDirectoryBlock()
 {
 	var keyInt = 0;
-	var valueArray;
+	var valArray;
 	var occupiedBit;
 	
 	for(key in localStorage)
@@ -132,8 +233,8 @@ function krnFindOpenDirectoryBlock()
 		
 		if( keyInt >= 0 && keyInt <= 77)
 		{
-			valueArray = JSON.parse(localStorage[key]);
-			occupiedBit = valueArray[0];
+			valArray = JSON.parse(localStorage[key]);
+			occupiedBit = valArray[0];
 			
 			if( occupiedBit === 0 )
 			{
@@ -149,11 +250,11 @@ function krnFindOpenDirectoryBlock()
 
 function krnSetValueOccupied(key, data)
 {
-	var valueArray = JSON.parse(key);
+	var valArray = JSON.parse(key);
 	
-	var track  = valueArray[0];
-	var sector = valueArray[1];
-	var block  = valueArray[2];
+	var track  = valArray[0];
+	var sector = valArray[1];
+	var block  = valArray[2];
 	
 	// Return a new value with an occupied status with an appropriate TSB pointer and data
 	return ( systemValue(1, track, sector, block, data) );
