@@ -37,6 +37,10 @@ var DEFAULT_QUANTUM = 6;
 // Default Priority
 var DEFAULT_PRIORITY = 5;
 
+// File System
+var MBR_KEY = "[0,0,0]";
+var NULL_TSB = "[-1,-1,-1]";
+
 
 // Memory Defaults
 var TOTAL_MEMORY = 768;
@@ -114,6 +118,7 @@ var _SarcasticMode = false;
 
 // Global Device Driver Objects - page 12
 var krnKeyboardDriver = null;
+var krnFileSystemDriver = null;
 
 // For testing...
 var _GLaDOS = null;

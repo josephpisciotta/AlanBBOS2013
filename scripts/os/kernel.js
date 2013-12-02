@@ -37,6 +37,13 @@ function krnBootstrap()      // Page 8.
    krnKeyboardDriver = new DeviceDriverKeyboard();     // Construct it.  TODO: Should that have a _global-style name?
    krnKeyboardDriver.driverEntry();                    // Call the driverEntry() initialization routine.
    krnTrace(krnKeyboardDriver.status);
+   
+   // Load the File System Driver
+	krnTrace("Loading the file system device driver.");
+    krnFileSystemDriver = new DeviceDriverFileSystem();     // Construct it.
+    krnFileSystemDriver.driverEntry();                    // Call the driverEntry() initialization routine.
+    krnTrace(krnFileSystemDriver.status);
+
 
    //
    // ... more?
