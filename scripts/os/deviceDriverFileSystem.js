@@ -146,10 +146,52 @@ function krnRead(filename){
 		var parentKey = systemKey(track,sect,block);
 		
 		var linkedFiles = krnGetLinkedFileBlocks(parentKey);
+		
+		var valArray;
+		var data;
+		var segments = [];
+		
+		for ( i in linkedFiles ){
+			valArray = JSON.parse(localStorage[linkedFiles[i]]);
+			data = valArray[4];
+			if(data.indexOf("-") != -1)
+				data = data.substring(0,data.indexOf("-"));
+			
+			segments.push(data);
+		}
+		var segString = segments.toString();
+		return segString.replace(/,/g, "");
+	}
+	catch(e){
+		return false;
 	}
 }
 
-
+function krnGetLinkedFileBlocks(parent){
+	var files = [parent];
+	
+	var curKey = parent;
+	
+	while( curKey != NULL_TSB )
+	{
+		var parentVals = JSON.parse( localStorage[curKey] );
+		var track = parentVals[1];
+		var sect = parentVals[2];
+		var block = parentVals[3];
+		
+		var child = systemKey(track, sect, block);
+		
+		if( child != NULL_TSB)
+		{
+			files.push(child);
+		}
+		
+		// Set our current key as the key we most recently processed
+		curKey = child;
+	}
+	
+	return files;
+}
 function krnLinkSegmentToParent(parent, child){
 	var valArray = JSON.parse(localStorage[parent]);
 	var data = valArray[4];
