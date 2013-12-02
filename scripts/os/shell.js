@@ -171,6 +171,41 @@ function shellInit() {
     sc.description = "gets the scheduling algorithm of the OS";
     sc.function = shellGetSchedule;
     this.commandList[this.commandList.length] = sc;
+    
+    // create
+	sc = new ShellCommand();
+    sc.command = "create";
+    sc.description = "<filename> - Creates a file in local storage with given filename";
+    sc.function = shellCreateFile;
+    this.commandList[this.commandList.length] = sc;
+    
+    // read
+	sc = new ShellCommand();
+    sc.command = "read";
+    sc.description = "<filename> - Reads a file in local storage with given filename";
+    sc.function = shellReadFile;
+    this.commandList[this.commandList.length] = sc;
+    
+    // write
+	sc = new ShellCommand();
+    sc.command = "write";
+    sc.description = "<filename> \"data\" -  writes data to a file in local storage with given filename";
+    sc.function = shellWriteFile;
+    this.commandList[this.commandList.length] = sc;
+    
+    // delete
+	sc = new ShellCommand();
+    sc.command = "delete";
+    sc.description = "<filename> -  deletes a file in local storage with given filename";
+    sc.function = shellDeleteFile;
+    this.commandList[this.commandList.length] = sc;
+    
+    // format
+	sc = new ShellCommand();
+    sc.command = "format";
+    sc.description = "formats local storage";
+    sc.function = shellFormat;
+    this.commandList[this.commandList.length] = sc;
 
     // processes - list the running processes and their IDs
     // kill <id> - kills the specified process id.
@@ -662,3 +697,93 @@ function shellKill(args){
 		_StdIn.putText("Please give a pid.");
 }
 
+function shellCreateFile(args){
+	var alphnum = /^[a-z0-9]+$/i;
+	
+	if (alphnum.test(args[0])){
+		if(krnFileSystemDriver.create(args[0])){
+			_StdIn.putText("File: "+ args[0] + " was created.");
+		}
+		else{
+			_StdIn.putText("Error creating file.");
+		}
+	}
+	else{
+		_StdIn.putText("Please enter a valid filename.");
+	}
+	
+}
+
+function shellReadFile(args){
+	var alphnum = /^[a-z0-9]+$/i;
+	
+	if (alphnum.test(args[0])){
+		var data = krnFileSystemDriver.read(args[0]);
+		if( data.length > 0 )
+		{	
+			for( var i = 0; i < data.length; i++ )
+			{	
+				if( i % 45 === 0 )
+					_StdIn.advanceLine();
+				_StdIn.putText(data.charAt(i));
+			}
+			
+			_StdIn.advanceLine();
+		}
+		else
+		{
+			_StdIn.putText("Read not successful");
+		}
+	}
+	else{
+		_StdIn.putText("Please enter a valid filename.");
+	}
+	
+}
+
+function shellWriteFile(args){
+	var alphnum = /^[a-z0-9]+$/;
+	
+	
+	if (alphnum.test(args[0])){
+			var data = args.join(" ");
+			data = data.substring(args[0].length + 1);
+			if(krnFileSystemDriver.write(args[0], data.substring(2,data.length-2))){
+				_StdIn.putText("File: "+ args[0]+ " was written.");
+			}
+			else{
+				_StdIn.putText("Error writing file.");
+			}
+	
+	}
+	else{
+		_StdIn.putText("Please enter a valid filename.");
+	}
+	
+}
+
+function shellDeleteFile(args){
+	var alphnum = /^[a-z0-9]+$/i;
+	
+	if (alphnum.test(args[0])){
+		if(krnFileSystemDriver.delete(args[0])){
+			_StdIn.putText("File: "+ args[0]+ " was deleted.");
+		}
+		else{
+			_StdIn.putText("Error deleting file.");
+		}
+	}
+	else{
+		_StdIn.putText("Please enter a valid filename.");
+	}
+	
+}
+
+function shellFormat(){
+	if(krnFileSystemDriver.format()){
+		_StdIn.putText("Disk formatted.");
+	}
+	else{
+		_StdIn.putText("Error formatting disk.");
+	}
+}

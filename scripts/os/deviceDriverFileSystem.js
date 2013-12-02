@@ -16,15 +16,20 @@ function DeviceDriverFileSystem()                     // Add or override specifi
     this.driverEntry = krnFileSystemDriverEntry;
     this.isr = null;
     // "Constructor" code.
-    this.format = krnFormat;
-   
+    this.format = krnFormat;   
 	this.create = krnCreate;
-	/*
     this.write = krnWrite;
     this.read = krnRead;
     this.delete = krnDelete;
-    this.listFiles = krnList;
-*/
+    this.listFiles = krnOccupiedDirectories;
+    
+    this.findOpenDirectoryBlock = krnFindOpenDirectoryBlock;
+    this.findOpenFileBlock = krnFindOpenFileBlock;
+    this.setValueOccupied = krnSetValueOccupied;
+    this.getDirectoryKeyFromName = krnGetDirectoryKeyFromName;
+    this.getLinkedFileBlocks = krnGetLinkedFileBlocks;
+    this.fillEmptySpace = krnFillSpace;
+    this.parseKey = parseKey;
 }
 
 function krnFileSystemDriverEntry()
@@ -73,7 +78,7 @@ function krnFormat(){
 function krnCreate(filename){
 	var dirKey = krnFindOpenDirectoryBlock();
 	
-	var filekey = krnFineOpenFileBlock();
+	var fileKey = krnFindOpenFileBlock();
 	
 	if (dirKey && fileKey && filename.length < 60){
 		localStorage[dirKey] = krnSetValueOccupied(fileKey, filename);
@@ -90,8 +95,9 @@ function krnCreate(filename){
 
 function krnWrite(filename, data){
 	var dirKey = krnGetDirectoryKeyFromName(filename);
+	console.log(dirKey + " " + filename + data);
 	
-	if (dirKey){
+	if (dirKey !== null){
 		var valArray = JSON.parse(localStorage[dirKey]);
 		
 		var track = valArray[1];
@@ -103,7 +109,7 @@ function krnWrite(filename, data){
 		var fileKey = systemKey(track,sect,block);
 		
 		if (data.length <= 60){
-			localStorage[fileKey] = fileSystemValue(1,-1,-1,-1,data);
+			localStorage[fileKey] = systemVal(1,-1,-1,-1,data);
 		}
 		else{
 			var blocksNeeded = Math.ceil(data.length/60);
@@ -126,8 +132,8 @@ function krnWrite(filename, data){
 				localStorage[nextFileKey] = krnSetValueOccupied(NULL_TSB, segments[i]);
 				krnLinkSegmentToParent(curBlockKey, nextFileKey);
 			}
-			return true;
 		}
+		return true;
 	}
 	else{
 		return false;
@@ -136,35 +142,104 @@ function krnWrite(filename, data){
 
 function krnRead(filename){
 	try{
+		// Get the occupied directory that contains tkrnhe associated filename
+		var directoryKey = krnGetDirectoryKeyFromName(filename);
+		// Read and store the file block TSB from the directory block
+		var valueArray = JSON.parse( localStorage[directoryKey] );
+		var track = valueArray[1];
+		var sector = valueArray[2];
+		var block = valueArray[3];
+		
+		// Put the file key (TSB) in the correct format
+		var parentFileKey = systemKey(track, sector, block);
+		
+		// See if there are any linked files to the origin file block
+		var linkedFileArray = krnGetLinkedFileBlocks(parentFileKey);
+		
+		// Vars needed to pull the data from the file values
+		var valueArray;
+		var data;
+		var dataSegmentsList = [];
+		
+		// Get the data of the files and put it in an array
+		for(index in linkedFileArray)
+		{
+			valueArray = JSON.parse( localStorage[linkedFileArray[index]] );
+			data = valueArray[4];
+			// Trim the data of dashes (if any)
+			if( data.indexOf("-") != -1 )
+				data = data.substring(0, data.indexOf("-"));
+			dataSegmentsList.push(data);
+		}
+
+		// Return the opcode string without commas
+		return dataSegmentsList.toString().replace(/,/g, "");
+	}
+	catch(e){
+		return false;
+	}
+}
+
+function krnDelete(filename){
+	try{
 		var dirKey = krnGetDirectoryKeyFromName(filename);
+		
 		var valArray = JSON.parse(localStorage[dirKey]);
 		
 		var track = valArray[1];
 		var sect = valArray[2];
 		var block = valArray[3];
 		
+		localStorage[dirKey] = systemVal(0,-1,-1,-1,"");
+		
 		var parentKey = systemKey(track,sect,block);
-		
 		var linkedFiles = krnGetLinkedFileBlocks(parentKey);
-		
-		var valArray;
-		var data;
+	
 		var segments = [];
-		
-		for ( i in linkedFiles ){
-			valArray = JSON.parse(localStorage[linkedFiles[i]]);
-			data = valArray[4];
-			if(data.indexOf("-") != -1)
-				data = data.substring(0,data.indexOf("-"));
-			
-			segments.push(data);
+		for (i in segments){
+			krnFormatLineWithKey(segments[i]);
 		}
-		var segString = segments.toString();
-		return segString.replace(/,/g, "");
+		return true;
 	}
 	catch(e){
 		return false;
 	}
+}
+
+function krnFormatLineWithKey(key)
+{
+	localStorage[key] = filesystemVal(0, -1, -1, -1, "");
+}
+
+function krnOccupiedDirectories(){
+	var keyInt = 0;
+	var filenames = [];
+	var valArray;
+	var occupiedBit;
+	var filename;
+	for (key in localStorage){
+		keyInt = parseKey(key);
+		if(keyInt > 0 && keyInt <= 77){
+			valArray = JSON.parse(localStorage[key]);
+			occupiedBit = valArray[0];
+			
+			if(occupiedBit){
+				filename = valArray[4];
+				if(filename.indexOf("-") != -1)
+					filename = filename.substring(0, filename.indexOf("-"));
+					
+				filenames.push(filename);
+			}
+		}
+	}
+	
+	if(filenames.length>0){
+		return filenames;
+	}
+	else{
+		return null;
+	}
+		
 }
 
 function krnGetLinkedFileBlocks(parent){
@@ -299,7 +374,7 @@ function krnSetValueOccupied(key, data)
 	var block  = valArray[2];
 	
 	// Return a new value with an occupied status with an appropriate TSB pointer and data
-	return ( systemValue(1, track, sector, block, data) );
+	return ( systemVal(1, track, sector, block, data) );
 }
 
 function krnFillSpace(data){
