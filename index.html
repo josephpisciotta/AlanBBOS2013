@@ -2,7 +2,12 @@
 <html>
 <head>
    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
    <meta name="author"             content="Alan G. Labouseur" />
+      <link rel="stylesheet" href="css/bootstrap.css" type="text/css"/>
+            <link rel="stylesheet" href="css/bootstrap-responsive.css" type="text/css" />
+
    <link rel="stylesheet" href="josf.css" type="text/css" media="screen" />
    <title>
       jOS F - a Browser-based virtual Operating System
@@ -39,13 +44,8 @@
 </head>
 
 <body onload="hostInit();">
-
-<table id="divMain" style="width:100%;">
-
-   <tr>
-   	<td width="400px">
-   	</td>
-   	<td id="divButtonBar" style="margin:4px;">
+<div class="row-fluid">
+   	<div id="divButtonBar" class="span6 offset5">
       <input type="button"
              id = "btnStartOS"
              name="brnStartOS"
@@ -71,12 +71,15 @@
              value="Reset"
              tabindex="2"
              onclick="hostBtnReset_click(this);">
-	</td>
+	</div>
 
-   </tr>
+</div>
+<br />
+<br />
+<div  class="container-fluid">
 
-   <tr id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">
-   	<td>
+<div id="divConsole" class="row-fluid show-grid" style="width:100%;">
+	<div class="span4" style="width:400px;">
 			   <div id="divMemDisplay" style="">
 			   		<table id="memTable">
 			   		</table>
@@ -154,52 +157,53 @@
 				   		</tr>
 				   </table>
 			</div>
-	</td>
-   	<td rowspan="2">
+	</div>
+   	<div class="span6" style="width:500px;">
       <canvas id="display"
               width="500px"
               height="500px"
               tabindex="3">
       </canvas>
-   	</td>
-   	<td>
-   	<div id="divLog" style="">
-      <label>
-         Log
-         <br>
-         <textarea name="taLog"
-                   id  ="taLog"
-                   rows="26"
-                   cols="48"
-         ></textarea>
-      </label>
    	</div>
-   	<div id="divUserProgramInput" style="">
-      <label>
-         User Program Input
-         <br>
-         <textarea name="taProgramInput"
-                   id  ="taProgramInput"
-                   rows="8"
-                   cols="48"
-         ></textarea>
-      </label>
-	</td>
-	
-   </tr>
+   	<div class="span2" style="width:206px;">
+	   	<div id="divLog">
+	      <label>
+	         Log
+	         <br>
+	         <textarea name="taLog"
+	                   id  ="taLog"
+	                   rows="26"
+	                   cols="50"
+	         ></textarea>
+	      </label>
+	   	</div>
+	   	<div id="divUserProgramInput" style="">
+	      <label>
+	         User Program Input
+	         <br>
+	         <textarea name="taProgramInput"
+	                   id  ="taProgramInput"
+	                   rows="8"
+	                   cols="50"
+	         ></textarea>
+	      </label>
+		</div>
+   	</div>
+</div>
 
-   
-   
+</div>
 
-</table>
-
-<div id="footerText" style="clear:both;">
+<div class="row-fluid">
+<div id="footerText" class="span12">
    <br>
    Copyright &copy; 2008 - 2013 No Rights Reserved.
    <br>
    Reproduction is prohibited without the express written consent of
    Ted Codd, Stevie Ray Vaughan, and Ian Fleming.
 </div>
+</div>
+   	<script src="http://code.jquery.com/jquery.js"></script>
+   <script type="text/javascript" src="js/bootstrap.js"></script>	
 
 </body>
 </html>
