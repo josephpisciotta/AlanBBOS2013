@@ -10,11 +10,13 @@ function Scheduler()
 	this.setSchedule = function(input){
 		if (input === RR){
 			this.schedule = RR;
+			_ReadyQueue.priorityQueue = false;
 			return "Scheduling algorithm set to Round Robin.";
 		}
 		else if (input === FCFS){
 			this.schedule = FCFS;
 			_UsedQuantum = 256;
+			_ReadyQueue.priorityQueue = false;
 			return "Scheduling algorithm set to First Come, First Served.";
 		}
 		else if (input === PRIORITY){
