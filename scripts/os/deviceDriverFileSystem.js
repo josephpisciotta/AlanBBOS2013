@@ -70,3 +70,110 @@ function krnFormat(){
 	}
 }
 
+function krnCreate(filename){
+	var dirKey = krnFindOpenDirectoryBlock();
+	
+	var filekey = krnFineOpenFileBlock();
+	
+	if (dirKey && fileKey && filename.length < 60){
+		localStorage[dirKey] = krnSetValueOccupied(fileKey, filename);
+		
+		localStorage[fileKey] = krnSetValueOccupied(NULL_TSB, "");
+		
+		return true;
+	}
+	else{
+		return "Error";
+	}
+	
+}
+
+function krnWrite(filename, data){
+	var dirKey = krnGetDirectoryKeyFromName(filename);
+}
+
+function krnFindOpenFileBlock()
+{
+	var keyInt = 0;
+	var valueArray;
+	var occupiedBit;
+	
+	for(key in localStorage)
+	{
+		keyInt = parseKey(key);
+		
+		// Ensure we are iterating through file space only
+		if( keyInt >= 100 && keyInt <= 300)
+		{
+			valueArray = JSON.parse(localStorage[key]);
+			occupiedBit = valueArray[0];
+			
+			if( occupiedBit === 0 )
+			{
+				// TSB of the open file block
+				return( key );
+			}
+		}
+	}
+	
+	// If no file blocks are open return null
+	return null;
+}
+
+function krnFindOpenDirectoryBlock()
+{
+	var keyInt = 0;
+	var valueArray;
+	var occupiedBit;
+	
+	for(key in localStorage)
+	{
+		keyInt = parseKey(key);
+		
+		if( keyInt >= 0 && keyInt <= 77)
+		{
+			valueArray = JSON.parse(localStorage[key]);
+			occupiedBit = valueArray[0];
+			
+			if( occupiedBit === 0 )
+			{
+				// TSB of the open directory block
+				return( key );
+			}
+		}
+	}
+	
+	// If no directory blocks are open return null
+	return null;
+}
+
+function krnSetValueOccupied(key, data)
+{
+	var valueArray = JSON.parse(key);
+	
+	var track  = valueArray[0];
+	var sector = valueArray[1];
+	var block  = valueArray[2];
+	
+	// Return a new value with an occupied status with an appropriate TSB pointer and data
+	return ( systemValue(1, track, sector, block, data) );
+}
+
+function krnFillSpace(data){
+	var bytes = data.length;
+	
+	for (var i = bytes; i < 60; i++){
+		data += "-";
+	}
+	
+	return data
+}
+
+function parseKey(key)
+{
+	// Strip key
+	key = key.replace(/\]|\[|,/g, "");
+	key = parseInt(key);
+	
+	return key;
+}
