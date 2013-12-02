@@ -32,19 +32,19 @@ function MemoryManager()
 	this.getRelocationValue = function()
 	{	
 		return _CurrentProcess.base;
-	}
+	};
 	
 	this.getNextByte = function()
 	{	
 		// next byte in memory
 		return _Memory[ (++_CPU.PC) + this.getRelocationValue() ];
-	}
+	};
 	
 	// translate hex address to memory address
 	this.translateAddress = function(hexAddress)
 	{
 		return parseInt( hexAddress, 16 ) + this.getRelocationValue();
-	}
+	};
 	
 	// is the address valid
 	this.isValidAddress = function(address)
@@ -54,13 +54,13 @@ function MemoryManager()
 		var limit = _CurrentProcess.limit;
 		// Make sure address is within bounds
 		return ( address >= base && address <= limit );
-	}
+	};
 	
 	// returns whether the slot is available
 	this.openSlotExists = function()
 	{
 		return ( this.memorySlots.slotOne.available || this.memorySlots.slotTwo.available || this.memorySlots.slotThree.available );
-	}
+	};
 	
 	// return the slot if it is open
 	this.getOpenSlot = function()
@@ -76,7 +76,7 @@ function MemoryManager()
 		
 
 		return null;
-	}
+	};
 
 	// Assigns the memory map's slot open properties to true/false 
 	this.toggleSlotStatus = function(slotNum)
@@ -104,7 +104,7 @@ function MemoryManager()
 			
 		}
 
-	}
+	};
 	
 	// Return memory from slot
 	this.getMemoryContentFromSlot = function(slotNum)
@@ -131,7 +131,17 @@ function MemoryManager()
 			// Error
 			return [];
 		}
-	}
+	};
+	
+	// roll in
+	this.rollIn = function(process){
+		var filename = "process " + process.pid.toString();
+		
+		var code = krnFileSystemDriver.read(filename);
+		var opcodes = code.split(/\s/);
+		
+		var memorySlot = this.getOpenSlot();
+	};
 	
 	// clear slot 
 	this.clearMemorySlot = function(slotNum)
@@ -143,7 +153,7 @@ function MemoryManager()
 		}
 
 		
-	}
+	};
 	
 	// add byte to memory at position with offset if needed
 	this.addByte = function(data, position, proc)
@@ -151,5 +161,5 @@ function MemoryManager()
 			
 		console.log(proc.base);
 		_Memory[position + proc.base] = data;
-	}
+	};
 }

@@ -52,6 +52,7 @@ var PROCESS_LOADED   	= 1; // Process loaded in memory
 var PROCESS_READY		= 2; // Process added to ready queue awaiting execution
 var PROCESS_RUNNING 	= 3; // Process currently executing
 var PROCESS_TERMINATED 	= 4; // Process finished executing
+var DISK_PROCESS 	= 5;
 
 //
 // Global Variables

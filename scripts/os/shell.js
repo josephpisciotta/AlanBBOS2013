@@ -458,25 +458,45 @@ function shellLoad(args)
 		var blankRegex = /^\s*$/;
 		
 		var result;
+		var prioritySupplied = false;
 		// Test if prioirty entered is an int
 		if(intRegex.test(pri)) {
 			result = loadProgram(uInput.value, pri);
-
+			prioritySupplied = true;
 		}
-
-		// Otherwise 
+		// Otherwise Default priority
 		else{
 			result = loadProgram(uInput.value, DEFAULT_PRIORITY);
 		}
-	
-		if(result === -1){
-			_StdIn.putText("Can only hold 3 processes at this time.");
+		
+		var pid = result["pid"];
+		var loc = result["location"];
+		
+		if(pid == "undefined"){
+			_StdIn.putText("There was an error with loading the process.");
 		}
 		else{
-			_StdIn.putText("Process created with ID: " + result["pid"] + 
-						   " and Priority: " + result["priority"]);
+			if(prioritySupplied){
+				if(loc === "memory"){
+					_StdIn.putText("Process added to memory with PID: " + 
+									pid + " and priority: " + result["priority"]);
+				}
+				else{
+					_StdIn.putText("Process added to disk with PID: " + 
+									pid + " and priority: " + result["priority"]);
+				}
+			}
+			else{
+				if(loc === "memory"){
+					_StdIn.putText("Process added to memory with PID: " + 
+									pid);
+				}
+				else{
+					_StdIn.putText("Process added to disk with PID: " + 
+									pid);
+				}
+			}
 		}
-		
 	}
 	else{
 		_StdIn.putText("Invalid Input.");

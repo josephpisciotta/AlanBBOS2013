@@ -32,10 +32,21 @@ function loadProgram(code, priority)
 		
 		_ProcessList[process.pid] = process;
 		
-		return {"pid":process.pid, "priority":process.priority};
+		return {"pid":process.pid, "priority":process.priority, "location":"memory"};
 		
 	}
 	else{
-		return -1;
+		var process = createProcessControlBlock(priority);
+				
+		var filename = "process " + process.pid.toString();
+		
+		krnFileSystemDriver.create(filename);
+		
+		krnFileSystemDriver.write(filename, code);
+		
+		process.state = DISK_PROCESS;
+		_ProcessList[process.pid] = process;
+		
+		return {"pid":process.pid,"priority":priority, "location":"disk"};
 	}
 }
