@@ -21,11 +21,22 @@ var TIMER_IRQ = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt prio
 var KEYBOARD_IRQ = 1; 
 var ModeSwitch = 2;
 
+// Schedules
+var RR = "rr";
+var FCFS = "fcfs";
+var PRIORITY = "priority";
+
 // Schedler Default
-var DEFAULT_SCHEDULE = "rr";
+var DEFAULT_SCHEDULE = RR;
+
+
 
 // Quantum for Round Robin
 var DEFAULT_QUANTUM = 6; 
+
+// Default Priority
+var DEFAULT_PRIORITY = 5;
+
 
 // Memory Defaults
 var TOTAL_MEMORY = 768;

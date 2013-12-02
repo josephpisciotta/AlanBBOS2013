@@ -158,11 +158,18 @@ function shellInit() {
     sc.function = shellBSOD;
     this.commandList[this.commandList.length] = sc;
     
-    // bsod
+    // setSchedule
 	sc = new ShellCommand();
     sc.command = "setschedule";
     sc.description = "<rr, fcfs, priority> - sets the scheduling algorithm of the OS";
     sc.function = shellSetSchedule;
+    this.commandList[this.commandList.length] = sc;
+    
+    // getSchedule
+	sc = new ShellCommand();
+    sc.command = "getschedule";
+    sc.description = "gets the scheduling algorithm of the OS";
+    sc.function = shellGetSchedule;
     this.commandList[this.commandList.length] = sc;
 
     // processes - list the running processes and their IDs
@@ -399,9 +406,10 @@ function shellMan(args)
         _StdIn.putText("Usage: man <topic>  Please supply a topic.");
     }
 }
-function shellLoad()
+function shellLoad(args)
 {
 	var uInput = document.getElementById("taProgramInput");
+	
 	
 	//Validation
 	var valid = /^[0-9A-F ]+$/i.test(uInput.value);
@@ -409,12 +417,29 @@ function shellLoad()
 	
 	if(valid){
 	
-		var result = loadProgram(uInput.value);
+		var pri = args[0];
+	
+		var intRegex = /^\d+$/;
+		var blankRegex = /^\s*$/;
+		
+		var result;
+		// Test if prioirty entered is an int
+		if(intRegex.test(pri)) {
+			result = loadProgram(uInput.value, pri);
+
+		}
+
+		// Otherwise 
+		else{
+			result = loadProgram(uInput.value, DEFAULT_PRIORITY);
+		}
+	
 		if(result === -1){
 			_StdIn.putText("Can only hold 3 processes at this time.");
 		}
 		else{
-			_StdIn.putText("Process created with ID: " + result);
+			_StdIn.putText("Process created with ID: " + result["pid"] + 
+						   " and Priority: " + result["priority"]);
 		}
 		
 	}
@@ -590,21 +615,12 @@ function shellRunAll()
 
 function shellSetSchedule(args){
 	var input = args[0];
-	if (input === "rr"){
-		_Scheduler.schedule = "rr";
-		_StdIn.putText("Scheduling algorithm set to Round Robin.");
-	}
-	else if (input === "fcfs"){
-		_Scheduler.schedule = "fcfs";
-		_StdIn.putText("Scheduling algorithm set to First Come, First Served.");
-	}
-	else if (input === "priority"){
-		_Scheduler.schedule = "priority";
-		_StdIn.putText("Scheduling algorithm set to Priority.");
-	}
-	else{
-		_StdIn.putText("This command requires as an input either: rr, fcfs, or priority");
-	}
+	var result = _Scheduler.setSchedule(input);
+	_StdIn.putText(result);
+}
+
+function shellGetSchedule(args){
+	_StdIn.putText("Current schedule: " + _Scheduler.schedule);
 }
 
 function shellProcesses(){

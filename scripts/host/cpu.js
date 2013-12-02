@@ -38,8 +38,19 @@ function Cpu() {
     };
     
     this.cycle = function() {
-	    if(_CycleCount > _UsedQuantum)
-	    	_Scheduler.contextSwitch();
+    	// Round Robin or FCFS because if we set it to FCFS the Quantum is very large
+    	if(_Scheduler.schedule === RR || _Scheduler.schedule === FCFS){
+	    	if(_CycleCount > _UsedQuantum)
+	    		_Scheduler.contextSwitch();
+    	}
+	    
+	    // Priority
+	    if(_Scheduler.schedule === PRIORITY){
+		    if( _CurrentProcess.state === PROCESS_TERMINATED )
+			{
+				_Scheduler.contextSwitch();
+			}
+	    }
 	    		
     	this.execute( this.fetch() );
         krnTrace("CPU cycle");

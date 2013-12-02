@@ -4,7 +4,7 @@
 	May eventually refactor this into the kernel
 */
 
-function loadProgram(code)
+function loadProgram(code, priority)
 {
 	// input already validated
 	
@@ -16,7 +16,7 @@ function loadProgram(code)
 	// Make sure memory slot exists
 	if (_MemoryManager.openSlotExists())
 	{
-		var process = createProcessControlBlock();
+		var process = createProcessControlBlock(priority);
 		
 		_MemoryManager.clearMemorySlot(process.slot);
 		
@@ -32,7 +32,7 @@ function loadProgram(code)
 		
 		_ProcessList[process.pid] = process;
 		
-		return process.pid;
+		return {"pid":process.pid, "priority":process.priority};
 		
 	}
 	else{

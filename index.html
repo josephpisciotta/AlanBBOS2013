@@ -29,7 +29,7 @@
    <script type="text/javascript" src="scripts/os/console.js"></script>	
    <script type="text/javascript" src="scripts/os/deviceDriver.js"></script>
    <script type="text/javascript" src="scripts/os/deviceDriverKeyboard.js"></script>
-   <script type="text/javascript" src="scripts/os/queue.js"></script>
+   <script type="text/javascript" src="scripts/os/priorityQueue.js"></script>
    <script type="text/javascript" src="scripts/os/pcb.js"></script>
    <script type="text/javascript" src="scripts/os/memoryManager.js"></script>
    <script type="text/javascript" src="scripts/os/programLoader.js"></script>
@@ -164,6 +164,17 @@
               height="500px"
               tabindex="3">
       </canvas>
+      <div id="divUserProgramInput" style="">
+	      <label>
+	         User Program Input
+	         <br>
+	         <textarea name="taProgramInput"
+	                   id  ="taProgramInput"
+	                   rows="5"
+	                   style="width:480px;"
+	         ></textarea>
+	      </label>
+		</div>
    	</div>
    	<div class="span2" style="width:206px;">
 	   	<div id="divLog">
@@ -173,21 +184,11 @@
 	         <textarea name="taLog"
 	                   id  ="taLog"
 	                   rows="26"
-	                   cols="50"
+	                   cols="40"
 	         ></textarea>
 	      </label>
 	   	</div>
-	   	<div id="divUserProgramInput" style="">
-	      <label>
-	         User Program Input
-	         <br>
-	         <textarea name="taProgramInput"
-	                   id  ="taProgramInput"
-	                   rows="8"
-	                   cols="50"
-	         ></textarea>
-	      </label>
-		</div>
+	   	
    	</div>
 </div>
 

@@ -7,6 +7,25 @@
 function Scheduler()
 {
 	this.schedule = DEFAULT_SCHEDULE;
+	this.setSchedule = function(input){
+		if (input === RR){
+			this.schedule = RR;
+			return "Scheduling algorithm set to Round Robin.";
+		}
+		else if (input === FCFS){
+			this.schedule = FCFS;
+			_UsedQuantum = 256;
+			return "Scheduling algorithm set to First Come, First Served.";
+		}
+		else if (input === PRIORITY){
+			this.schedule = PRIORITY;
+			_ReadyQueue.priorityQueue = true;
+			return "Scheduling algorithm set to Priority.";
+		}
+		else{
+			return "This command requires as an input either: rr, fcfs, or priority";
+		}
+	}
 	this.contextSwitch = function(){
 		if(_ReadyQueue.peek()){
 			hostLog("\nContext Switch...\n","OS");
