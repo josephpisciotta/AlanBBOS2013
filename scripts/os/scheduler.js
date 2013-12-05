@@ -46,7 +46,7 @@ function Scheduler()
 			_CurrentProcess = _ReadyQueue.dequeue();
 			hostLog("\nSwitched to process: "+_CurrentProcess.pid+".\nThis process now will begin running.");
 			
-			// roll in roll our if needed
+			// roll in roll our to/from disk
 			if( _CurrentProcess.slot === -1 )
 			{	
 
