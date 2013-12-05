@@ -39,8 +39,11 @@ function hostInit()
 	// Set focus on the start button.
    document.getElementById("btnStartOS").focus();
 
-   // Create Memory view
+   // Create Memory table
    createMemoryTable();
+   
+   // Create Disk table
+   createDiskTable();
 
    // Check for our testing and enrichment core.
    

@@ -55,8 +55,8 @@ function krnFormat(){
 		var key = "";
 		var val = "";
 		
-		for (var track = 0; track <= 3; track++){
-			for(var sect = 0; sect <=7; sect++){
+		for (var track = 0; track < 4; track++){
+			for(var sect = 0; sect < 8; sect++){
 				for(var block = 0; block <= 7; block++){
 					key = systemKey(track,sect,block);
 					value = systemVal(0,-1,-1,-1,"");
@@ -195,9 +195,8 @@ function krnDelete(filename){
 		var parentKey = systemKey(track,sect,block);
 		var linkedFiles = krnGetLinkedFileBlocks(parentKey);
 	
-		var segments = [];
-		for (i in segments){
-			krnFormatLineWithKey(segments[i]);
+		for (i in linkedFiles){
+			krnFormatLineWithKey(linkedFiles[i]);
 		}
 		return true;
 	}
@@ -208,7 +207,7 @@ function krnDelete(filename){
 
 function krnFormatLineWithKey(key)
 {
-	localStorage[key] = filesystemVal(0, -1, -1, -1, "");
+	localStorage[key] = systemVal(0, -1, -1, -1, "");
 }
 
 function krnOccupiedDirectories(){

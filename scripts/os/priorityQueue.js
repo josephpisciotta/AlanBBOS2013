@@ -50,7 +50,7 @@ function Queue()
     this.getItem = function(index) {
 	  	var elem = this.q[index];
 	  	if(elem){
-		  	return elem.object;
+		  	return elem;
 	  	}
 	  	else
 	  		return undefined;
@@ -87,4 +87,7 @@ function Queue()
         }
         return retVal;
     };
+    this.size = function(){
+	    return this.q.length;
+    }
 }

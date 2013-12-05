@@ -206,6 +206,13 @@ function shellInit() {
     sc.description = "formats local storage";
     sc.function = shellFormat;
     this.commandList[this.commandList.length] = sc;
+    
+    // ls
+	sc = new ShellCommand();
+    sc.command = "ls";
+    sc.description = "lists all the stored files on disk";
+    sc.function = shellLS;
+    this.commandList[this.commandList.length] = sc;
 
     // processes - list the running processes and their IDs
     // kill <id> - kills the specified process id.
@@ -626,7 +633,8 @@ function shellQuantum(args)
 
 function shellRun(args)
 {
-	_CurrentProcess = _ProcessList[args[0]];
+	_ReadyQueue.enqueue(args[0]);
+	_CurrentProcess = _ReadyQueue.dequeue();
 	
 	_CurrentProcess.state = PROCESS_RUNNING;
 	
@@ -736,9 +744,10 @@ function shellCreateFile(args){
 
 function shellReadFile(args){
 	var alphnum = /^[a-z0-9]+$/i;
-	
-	if (alphnum.test(args[0])){
-		var data = krnFileSystemDriver.read(args[0]);
+		var file = args.join(" ");
+	console.log(file);
+	if (alphnum.test(file)){
+		var data = krnFileSystemDriver.read(file);
 		if( data.length > 0 )
 		{	
 			for( var i = 0; i < data.length; i++ )
@@ -764,7 +773,7 @@ function shellReadFile(args){
 function shellWriteFile(args){
 	var alphnum = /^[a-z0-9]+$/;
 	
-	
+
 	if (alphnum.test(args[0])){
 			var data = args.join(" ");
 			data = data.substring(args[0].length + 1);
@@ -783,11 +792,11 @@ function shellWriteFile(args){
 }
 
 function shellDeleteFile(args){
-	var alphnum = /^[a-z0-9]+$/i;
-	
-	if (alphnum.test(args[0])){
-		if(krnFileSystemDriver.delete(args[0])){
-			_StdIn.putText("File: "+ args[0]+ " was deleted.");
+	var alphnum = /^[a-z0-9 ]+$/i;
+	var file = args.join(" ");
+	if (alphnum.test(file)){
+		if(krnFileSystemDriver.delete(file)){
+			_StdIn.putText("File: "+ file+ " was deleted.");
 		}
 		else{
 			_StdIn.putText("Error deleting file.");
@@ -806,4 +815,16 @@ function shellFormat(){
 	else{
 		_StdIn.putText("Error formatting disk.");
 	}
+}
+
+function shellLS(){
+	var files = krnFileSystemDriver.listFiles();
+	
+
+	for (i in files){
+		console.log();
+		_StdIn.putText(files[i]);
+		_StdIn.advanceLine();
+	}
+
 }

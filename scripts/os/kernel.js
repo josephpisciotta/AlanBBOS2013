@@ -87,6 +87,7 @@ function krnOnCPUClockPulse()
        that it has to look for interrupts and process them if it finds any.                           */
 	   
 	updateMemoryDisplay();
+	updateDiskDisplay();
 	if(_CurrentProcess != null)
 		updatePCBDisplay();
     // Check for an interrupt, are any. Page 560

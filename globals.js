@@ -79,6 +79,8 @@ var _CycleCount = 1;
 
 var _MemoryTableCells = null;
 
+var _DiskTableCells = null;
+
 var _OSclock = 0;       // Page 23.
 
 var _Mode = 1;   // 0 = Kernel Mode, 1 = User Mode.  See page 21.

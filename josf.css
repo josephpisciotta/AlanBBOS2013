@@ -14,7 +14,7 @@ h1 {
 	font-size: 24pt;
 	font-weight: normal;
 	font-style: normal;	
-   border-bottom: 1px solid black;
+	text-shadow: 8px 11px 38px black;
 }
 
 h2 {
@@ -56,23 +56,46 @@ h3 {
 	height:250px;
 	overflow:scroll;
 }
+
+#divDiskDisplay {
+	width:400px;
+	height:250px;
+	overflow:scroll;
+}
+
+table {
+	background:#d8f5e4;
+}
+
 #memTable {
 	width:400px;
 	height: 800px;
-	background: #999999;
+}
+#diskTable {
+	width:400px;
+	height: 800px;
+}
+#diskTable td:last-child {
+	font-size: 12px;;
 }
 #cpuTable{
-	background:#999;
 	margin-top: 5px;
 	width:400px;
 }
+table tr:first-child th:first-child{
+	background: #b1c9b8;
+}
+table td{
+	border: #b1c9b8 solid 1px;
+}
+table th{
+	border: #b1c9b8 solid 1px;
+}
 #pcbTable{
-	background:#999;
 	margin-top: 5px;
 	width:400px;
 }
 #rqTable{
-	background:#999;
 	margin-top: 5px;
 	height: 100px;
 	width:400px;

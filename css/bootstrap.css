@@ -231,13 +231,13 @@ body {
 }
 
 a {
-  color: #0088cc;
+  color: #819988;
   text-decoration: none;
 }
 
 a:hover,
 a:focus {
-  color: #005580;
+  color: #91a998;
   text-decoration: underline;
 }
 
@@ -4059,6 +4059,8 @@ input[type="submit"].btn.btn-mini {
 
 .nav-tabs {
   border-bottom: 1px solid #ddd;
+  margin-bottom: 0px;
+  margin-left: 5px;
 }
 
 .nav-tabs > li {
@@ -4085,11 +4087,20 @@ input[type="submit"].btn.btn-mini {
 .nav-tabs > .active > a:focus {
   color: #555555;
   cursor: default;
-  background-color: #ffffff;
+  background-color: #b1c9b8;
   border: 1px solid #ddd;
   border-bottom-color: transparent;
 }
 
+.nav-tabs > .selected > a,
+.nav-tabs > .selected > a:hover,
+.nav-tabs > .selected > a:focus {
+  color: #555555;
+  cursor: default;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-bottom-color: transparent;
+}
 .nav-pills > li > a {
   padding-top: 8px;
   padding-bottom: 8px;
@@ -4243,7 +4254,15 @@ input[type="submit"].btn.btn-mini {
 }
 
 .tab-content {
+  padding-top: 20px;
+    padding-bottom: 20px;
+
   overflow: auto;
+  border: 1px solid transparent;
+  background: #b1c9b8;
+  -webkit-border-radius: 4px 4px 4px 4px;
+     -moz-border-radius: 4px 4px 4px 4px;
+          border-radius: 4px 4px 4px 4px;
 }
 
 .tabs-below > .nav-tabs,
@@ -4263,7 +4282,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 .tabs-below > .nav-tabs {
-  border-top: 1px solid #ddd;
+  border: 1px solid #ddd;
 }
 
 .tabs-below > .nav-tabs > li {

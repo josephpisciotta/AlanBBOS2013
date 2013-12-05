@@ -138,10 +138,52 @@ function MemoryManager()
 		var filename = "process " + process.pid.toString();
 		
 		var code = krnFileSystemDriver.read(filename);
-		var opcodes = code.split(/\s/);
+		if (code !== false){
+			var opcodes = code.split(/\s/);
 		
-		var memorySlot = this.getOpenSlot();
+			var memorySlot = _MemoryManager.getOpenSlot();
+			
+			process.base = memorySlot.base;
+			process.limit = memorySlot.limit;
+			process.slot = memorySlot.slotNumber;
+			process.state = PROCESS_LOADED;
+			
+			this.toggleSlotStatus(process.slot);
+			var opcode = "";
+			
+			console.log(process.base);
+			for( var i = 0; i < opcodes.length; i++ ){
+				opcode = opcodes[i];
+				this.addByte(opcode.toUpperCase(), i, process);
+			}
+			
+			krnFileSystemDriver.delete(filename);
+		}
+		else{
+			delete _ProcessList[process.pid];
+		}
+		
 	};
+	
+	// roll out
+	this.rollOut = function(process){
+		var filename = "process " + process.pid.toString();
+		
+		var opcodes = this.getMemoryContentFromSlot(process.slot);
+		
+		var code = opcodes.join(" ");
+		
+		krnFileSystemDriver.create(filename);
+		krnFileSystemDriver.write(filename, code);
+		
+		this.toggleSlotStatus(process.slot);
+		
+		this.clearMemorySlot(process.slot);
+		process.base = -1;
+		process.limit = -1;
+		process.slot = -1;
+		process.state = DISK_PROCESS;
+	}
 	
 	// clear slot 
 	this.clearMemorySlot = function(slotNum)
