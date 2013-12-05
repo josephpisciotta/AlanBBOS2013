@@ -6,6 +6,28 @@
 
 function Scheduler()
 {
+	this.schedule = DEFAULT_SCHEDULE;
+	this.setSchedule = function(input){
+		if (input === RR){
+			this.schedule = RR;
+			_ReadyQueue.priorityQueue = false;
+			return "Scheduling algorithm set to Round Robin.";
+		}
+		else if (input === FCFS){
+			this.schedule = FCFS;
+			_UsedQuantum = 256;
+			_ReadyQueue.priorityQueue = false;
+			return "Scheduling algorithm set to First Come, First Served.";
+		}
+		else if (input === PRIORITY){
+			this.schedule = PRIORITY;
+			_ReadyQueue.priorityQueue = true;
+			return "Scheduling algorithm set to Priority.";
+		}
+		else{
+			return "This command requires as an input either: rr, fcfs, or priority";
+		}
+	}
 	this.contextSwitch = function(){
 		if(_ReadyQueue.peek()){
 			hostLog("\nContext Switch...\n","OS");
@@ -23,6 +45,17 @@ function Scheduler()
 			// Make the next process in ready queue the current process
 			_CurrentProcess = _ReadyQueue.dequeue();
 			hostLog("\nSwitched to process: "+_CurrentProcess.pid+".\nThis process now will begin running.");
+			
+			// roll in roll our if needed
+			if( _CurrentProcess.slot === -1 )
+			{	
+
+				if( _ReadyQueue.size() != 0 && !_MemoryManager.openSlotExists() )
+				{
+					_MemoryManager.rollOut(_ReadyQueue.getItem(_ReadyQueue.size() - 1));
+				}
+				_MemoryManager.rollIn(_CurrentProcess);
+			}
 
 			// Update CPU
 			_CPU.update(_CurrentProcess.pc, _CurrentProcess.acc, _CurrentProcess.x, _CurrentProcess.y, _CurrentProcess.z);

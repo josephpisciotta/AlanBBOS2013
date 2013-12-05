@@ -37,6 +37,13 @@ function krnBootstrap()      // Page 8.
    krnKeyboardDriver = new DeviceDriverKeyboard();     // Construct it.  TODO: Should that have a _global-style name?
    krnKeyboardDriver.driverEntry();                    // Call the driverEntry() initialization routine.
    krnTrace(krnKeyboardDriver.status);
+   
+   // Load the File System Driver
+	krnTrace("Loading the file system device driver.");
+    krnFileSystemDriver = new DeviceDriverFileSystem();     // Construct it.
+    krnFileSystemDriver.driverEntry();                    // Call the driverEntry() initialization routine.
+    krnTrace(krnFileSystemDriver.status);
+
 
    //
    // ... more?
@@ -80,6 +87,7 @@ function krnOnCPUClockPulse()
        that it has to look for interrupts and process them if it finds any.                           */
 	   
 	updateMemoryDisplay();
+	updateDiskDisplay();
 	if(_CurrentProcess != null)
 		updatePCBDisplay();
     // Check for an interrupt, are any. Page 560
@@ -140,7 +148,7 @@ function krnInterruptHandler(irq, params)    // This is the Interrupt Handler Ro
             krnKeyboardDriver.isr(params);   // Kernel mode device driver
             _StdIn.handleInput();
             break;
-        case ContextSwitch:
+        case ModeSwitch:
         	if(params[0] === 0 || params[0] === 1)
         		_Mode = params[0];
         	break;

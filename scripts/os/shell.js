@@ -157,6 +157,62 @@ function shellInit() {
     sc.description = "- blue screen of death. be warned.";
     sc.function = shellBSOD;
     this.commandList[this.commandList.length] = sc;
+    
+    // setSchedule
+	sc = new ShellCommand();
+    sc.command = "setschedule";
+    sc.description = "<rr, fcfs, priority> - sets the scheduling algorithm of the OS";
+    sc.function = shellSetSchedule;
+    this.commandList[this.commandList.length] = sc;
+    
+    // getSchedule
+	sc = new ShellCommand();
+    sc.command = "getschedule";
+    sc.description = "gets the scheduling algorithm of the OS";
+    sc.function = shellGetSchedule;
+    this.commandList[this.commandList.length] = sc;
+    
+    // create
+	sc = new ShellCommand();
+    sc.command = "create";
+    sc.description = "<filename> - Creates a file in local storage with given filename";
+    sc.function = shellCreateFile;
+    this.commandList[this.commandList.length] = sc;
+    
+    // read
+	sc = new ShellCommand();
+    sc.command = "read";
+    sc.description = "<filename> - Reads a file in local storage with given filename";
+    sc.function = shellReadFile;
+    this.commandList[this.commandList.length] = sc;
+    
+    // write
+	sc = new ShellCommand();
+    sc.command = "write";
+    sc.description = "<filename> \"data\" -  writes data to a file in local storage with given filename";
+    sc.function = shellWriteFile;
+    this.commandList[this.commandList.length] = sc;
+    
+    // delete
+	sc = new ShellCommand();
+    sc.command = "delete";
+    sc.description = "<filename> -  deletes a file in local storage with given filename";
+    sc.function = shellDeleteFile;
+    this.commandList[this.commandList.length] = sc;
+    
+    // format
+	sc = new ShellCommand();
+    sc.command = "format";
+    sc.description = "formats local storage";
+    sc.function = shellFormat;
+    this.commandList[this.commandList.length] = sc;
+    
+    // ls
+	sc = new ShellCommand();
+    sc.command = "ls";
+    sc.description = "lists all the stored files on disk";
+    sc.function = shellLS;
+    this.commandList[this.commandList.length] = sc;
 
     // processes - list the running processes and their IDs
     // kill <id> - kills the specified process id.
@@ -392,9 +448,10 @@ function shellMan(args)
         _StdIn.putText("Usage: man <topic>  Please supply a topic.");
     }
 }
-function shellLoad()
+function shellLoad(args)
 {
 	var uInput = document.getElementById("taProgramInput");
+	
 	
 	//Validation
 	var valid = /^[0-9A-F ]+$/i.test(uInput.value);
@@ -402,14 +459,51 @@ function shellLoad()
 	
 	if(valid){
 	
-		var result = loadProgram(uInput.value);
-		if(result === -1){
-			_StdIn.putText("Can only hold 3 processes at this time.");
+		var pri = args[0];
+	
+		var intRegex = /^\d+$/;
+		var blankRegex = /^\s*$/;
+		
+		var result;
+		var prioritySupplied = false;
+		// Test if prioirty entered is an int
+		if(intRegex.test(pri)) {
+			result = loadProgram(uInput.value, pri);
+			prioritySupplied = true;
 		}
+		// Otherwise Default priority
 		else{
-			_StdIn.putText("Process created with ID: " + result);
+			result = loadProgram(uInput.value, DEFAULT_PRIORITY);
 		}
 		
+		var pid = result["pid"];
+		var loc = result["location"];
+		
+		if(pid == "undefined"){
+			_StdIn.putText("There was an error with loading the process.");
+		}
+		else{
+			if(prioritySupplied){
+				if(loc === "memory"){
+					_StdIn.putText("Process added to memory with PID: " + 
+									pid + " and priority: " + result["priority"]);
+				}
+				else{
+					_StdIn.putText("Process added to disk with PID: " + 
+									pid + " and priority: " + result["priority"]);
+				}
+			}
+			else{
+				if(loc === "memory"){
+					_StdIn.putText("Process added to memory with PID: " + 
+									pid);
+				}
+				else{
+					_StdIn.putText("Process added to disk with PID: " + 
+									pid);
+				}
+			}
+		}
 	}
 	else{
 		_StdIn.putText("Invalid Input.");
@@ -539,7 +633,8 @@ function shellQuantum(args)
 
 function shellRun(args)
 {
-	_CurrentProcess = _ProcessList[args[0]];
+	_ReadyQueue.enqueue(args[0]);
+	_CurrentProcess = _ReadyQueue.dequeue();
 	
 	_CurrentProcess.state = PROCESS_RUNNING;
 	
@@ -581,6 +676,16 @@ function shellRunAll()
 		_StdIn.putText("No loaded processes to run.")
 }
 
+function shellSetSchedule(args){
+	var input = args[0];
+	var result = _Scheduler.setSchedule(input);
+	_StdIn.putText(result);
+}
+
+function shellGetSchedule(args){
+	_StdIn.putText("Current schedule: " + _Scheduler.schedule);
+}
+
 function shellProcesses(){
 	var num = _ProcessList.length;
 	if (num === 0){
@@ -595,6 +700,7 @@ function shellProcesses(){
 		}
 	}
 }
+
 
 function shellKill(args){
 	if(args[0] % 1 === 0){
@@ -619,3 +725,106 @@ function shellKill(args){
 		_StdIn.putText("Please give a pid.");
 }
 
+function shellCreateFile(args){
+	var alphnum = /^[a-z0-9]+$/i;
+	
+	if (alphnum.test(args[0])){
+		if(krnFileSystemDriver.create(args[0])){
+			_StdIn.putText("File: "+ args[0] + " was created.");
+		}
+		else{
+			_StdIn.putText("Error creating file.");
+		}
+	}
+	else{
+		_StdIn.putText("Please enter a valid filename.");
+	}
+	
+}
+
+function shellReadFile(args){
+	var alphnum = /^[a-z0-9]+$/i;
+		var file = args.join(" ");
+	console.log(file);
+	if (alphnum.test(file)){
+		var data = krnFileSystemDriver.read(file);
+		if( data.length > 0 )
+		{	
+			for( var i = 0; i < data.length; i++ )
+			{	
+				if( i % 45 === 0 )
+					_StdIn.advanceLine();
+				_StdIn.putText(data.charAt(i));
+			}
+			
+			_StdIn.advanceLine();
+		}
+		else
+		{
+			_StdIn.putText("Read not successful");
+		}
+	}
+	else{
+		_StdIn.putText("Please enter a valid filename.");
+	}
+	
+}
+
+function shellWriteFile(args){
+	var alphnum = /^[a-z0-9]+$/;
+	
+
+	if (alphnum.test(args[0])){
+			var data = args.join(" ");
+			data = data.substring(args[0].length + 1);
+			if(krnFileSystemDriver.write(args[0], data.substring(2,data.length-2))){
+				_StdIn.putText("File: "+ args[0]+ " was written.");
+			}
+			else{
+				_StdIn.putText("Error writing file.");
+			}
+	
+	}
+	else{
+		_StdIn.putText("Please enter a valid filename.");
+	}
+	
+}
+
+function shellDeleteFile(args){
+	var alphnum = /^[a-z0-9 ]+$/i;
+	var file = args.join(" ");
+	if (alphnum.test(file)){
+		if(krnFileSystemDriver.delete(file)){
+			_StdIn.putText("File: "+ file+ " was deleted.");
+		}
+		else{
+			_StdIn.putText("Error deleting file.");
+		}
+	}
+	else{
+		_StdIn.putText("Please enter a valid filename.");
+	}
+	
+}
+
+function shellFormat(){
+	if(krnFileSystemDriver.format()){
+		_StdIn.putText("Disk formatted.");
+	}
+	else{
+		_StdIn.putText("Error formatting disk.");
+	}
+}
+
+function shellLS(){
+	var files = krnFileSystemDriver.listFiles();
+	
+
+	for (i in files){
+		console.log();
+		_StdIn.putText(files[i]);
+		_StdIn.advanceLine();
+	}
+
+}

@@ -1,5 +1,5 @@
 /* ------------
-   Queue.js
+   priorityQueue.js
    
    A simple Queue, which is really just a dressed-up JavaScript Array.
    See the Javascript Array documentation at http://www.w3schools.com/jsref/jsref_obj_array.asp .
@@ -11,11 +11,32 @@ function Queue()
 {
     // Properties
     this.q = new Array();
+    
+    // sorted bool
+    this.sorted = false;
+    
+    // priority
+    this.priorityQueue = false;
+    
+    // sort style
+    this.sortStyle = function(a,b){
+	    return a.priority - b.priority;
+    };
+    
 
     // Methods
     this.getSize = function() {
         return this.q.length;    
     };
+    
+
+	this.sort = function(){
+		if(this.priorityQueue){
+			this.q.sort(this.sortStyle);
+			this.sorted = true;
+		}
+	}
+
 
     this.isEmpty = function(){
         return (this.q.length == 0);    
@@ -23,18 +44,22 @@ function Queue()
 
     this.enqueue = function(element) {
         this.q.push(element);        
+        this.sorted = false;
     };
     
     this.getItem = function(index) {
 	  	var elem = this.q[index];
 	  	if(elem){
-		  	return elem.object;
+		  	return elem;
 	  	}
 	  	else
 	  		return undefined;
     };
     
     this.dequeue = function() {
+    	if(!this.sorted){
+	    	this.sort();
+    	}
         var retVal = null;
         if (this.q.length > 0)
         {
@@ -44,6 +69,9 @@ function Queue()
     };
     
     this.peek = function(){
+    	if(!this.sorted){
+	    	this.sort();
+    	}
 	    if(this.q.length>0){
 		   return (this.q[0]);
 	    }
@@ -59,4 +87,7 @@ function Queue()
         }
         return retVal;
     };
+    this.size = function(){
+	    return this.q.length;
+    }
 }

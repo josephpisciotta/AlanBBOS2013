@@ -21,8 +21,26 @@ var TIMER_IRQ = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt prio
 var KEYBOARD_IRQ = 1; 
 var ModeSwitch = 2;
 
+// Schedules
+var RR = "rr";
+var FCFS = "fcfs";
+var PRIORITY = "priority";
+
+// Schedler Default
+var DEFAULT_SCHEDULE = RR;
+
+
+
 // Quantum for Round Robin
 var DEFAULT_QUANTUM = 6; 
+
+// Default Priority
+var DEFAULT_PRIORITY = 5;
+
+// File System
+var MBR_KEY = "[0,0,0]";
+var NULL_TSB = "[-1,-1,-1]";
+
 
 // Memory Defaults
 var TOTAL_MEMORY = 768;
@@ -34,6 +52,7 @@ var PROCESS_LOADED   	= 1; // Process loaded in memory
 var PROCESS_READY		= 2; // Process added to ready queue awaiting execution
 var PROCESS_RUNNING 	= 3; // Process currently executing
 var PROCESS_TERMINATED 	= 4; // Process finished executing
+var DISK_PROCESS 	= 5;
 
 //
 // Global Variables
@@ -59,6 +78,8 @@ var _Scheduler = null;
 var _CycleCount = 1;
 
 var _MemoryTableCells = null;
+
+var _DiskTableCells = null;
 
 var _OSclock = 0;       // Page 23.
 
@@ -100,6 +121,7 @@ var _SarcasticMode = false;
 
 // Global Device Driver Objects - page 12
 var krnKeyboardDriver = null;
+var krnFileSystemDriver = null;
 
 // For testing...
 var _GLaDOS = null;

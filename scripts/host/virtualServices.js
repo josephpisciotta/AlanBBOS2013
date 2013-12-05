@@ -26,7 +26,7 @@ function createMemoryTable()
     // Clear contents of the table
 	while(memoryTable.hasChildNodes())
 	{
-		memoryTable.removeChild(memoryTable.firstChild);
+		memoryTable.removeChild(memTable.firstChild);
 	}
 
 	// Draw contents
@@ -38,7 +38,7 @@ function createMemoryTable()
 		if(i === 0) // First memory location of each block should be colored
 		{
 			rows[i] = memoryTable.insertRow(i);
-			rows[i].style.backgroundColor = "silver";
+			rows[i].style.backgroundColor = "#b1c9b8";
 		}
 		else // Insert normal rows
 		{
@@ -65,6 +65,7 @@ function createMemoryTable()
 	// Assign to table
 	_MemoryTableCells = cells;
 }
+
 function updateMemoryDisplay()
 {
 	// Table format is cells[row][col]
@@ -83,6 +84,63 @@ function updateMemoryDisplay()
 		}
 	}
 }
+
+// Disk display
+function createDiskTable()
+{
+    var diskTable = document.getElementById("diskTable");
+    
+    // Clear contents of the table
+	while(diskTable.hasChildNodes())
+	{
+		diskTable.removeChild(diskTable.firstChild);
+	}
+
+	// Draw contents
+    var rows = [];
+    var cells = [];
+
+    for( var i = 0; i < 256; i++ )
+    {
+		if(i === 0) // First memory location of each block should be colored
+		{
+			rows[i] = diskTable.insertRow(i);
+			rows[i].style.backgroundColor = "#b1c9b8";
+		}
+		else // Insert normal rows
+		{
+			rows[i] = diskTable.insertRow(i);
+		}
+        
+		// alloc num of cells per row
+		cells[i] = [];
+
+        for( var x = 0; x < 2; x++ )
+        {
+
+            cells[i][x] = document.createElement(( x === 0 ) ? "th" : "td");
+
+			if( x === 0 )
+				cells[i][x].innerHTML = localStorage.key(i);
+			else
+				cells[i][x].innerHTML = "&nbsp;";
+			// Add cells to the row
+            rows[rows.length - 1].appendChild(cells[i][x]);
+        }
+    }
+	
+	// Assign to table
+	_DiskTableCells = cells;
+}
+
+function updateDiskDisplay()
+{
+	for( var i = 0; i < 256; i++ )
+	{
+		_DiskTableCells[i][1].innerHTML = localStorage[localStorage.key(i)];
+	}
+}
+
 
 function clearCPU()
 {
@@ -127,6 +185,9 @@ function updateReadyQueueDisplay()
 					break;
 				case 4:
 					state = "PROCESS_TERMINATED";
+					break;
+				case 5:
+					state = "DISK_PROCESS";
 					break;
 			}
 			elems[0].innerHTML = _ReadyQueue.q[i].pid;

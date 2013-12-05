@@ -38,8 +38,38 @@ function Cpu() {
     };
     
     this.cycle = function() {
-	    if(_CycleCount > _UsedQuantum)
-	    	_Scheduler.contextSwitch();
+    
+    	// Filesystem roll in roll out
+    	
+    	if(_CurrentProcess.slot === -1){
+	    	if(!_MemoryManager.openSlotExists()){
+	    		if( _ReadyQueue.size() > 0 ) 
+					_MemoryManager.rollOut(_ReadyQueue.getItem(_ReadyQueue.size()- 1));
+	    		else{
+	    			var rollIndex;
+			    	for( i in _ProcessList){
+				    	if (_ProcessList[i].slot != -1)
+				    		rollIndex = i;
+			    	}
+			    	_MemoryManager.rollOut(_ProcessList[rollIndex]);
+			    }
+	    	}
+	    	_MemoryManager.rollIn(_CurrentProcess);
+    	}
+    
+    	// Round Robin or FCFS because if we set it to FCFS the Quantum is very large
+    	if(_Scheduler.schedule === RR || _Scheduler.schedule === FCFS){
+	    	if(_CycleCount > _UsedQuantum)
+	    		_Scheduler.contextSwitch();
+    	}
+	    
+	    // Priority
+	    if(_Scheduler.schedule === PRIORITY){
+		    if( _CurrentProcess.state === PROCESS_TERMINATED )
+			{
+				_Scheduler.contextSwitch();
+			}
+	    }
 	    		
     	this.execute( this.fetch() );
         krnTrace("CPU cycle");

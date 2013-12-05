@@ -10,7 +10,8 @@ function PCB (state, pid, pc, base, limit, slot, priority)
 	this.pc			= pc;		
 	this.base		= base;  	
 	this.limit		= limit;	
-	this.slot		= slot;	    
+	this.slot		= slot;	  
+	this.priority 	= priority;  
 	
 	// Registers
 	this.acc = 0;
@@ -31,24 +32,31 @@ function PCB (state, pid, pc, base, limit, slot, priority)
 	
 }
 
-function createProcessControlBlock()
+function createProcessControlBlock(pri)
 {
 	var state = PROCESS_NEW;
 	var pid = getCurrentPID();
 	var pc = 0;
 	
-	
 	// get memory location
 	var memorySlot = _MemoryManager.getOpenSlot();
 	
-	// deem memory taken
-	_MemoryManager.toggleSlotStatus(memorySlot.slotNumber);
-	var base = memorySlot.base;
-	var limit = memorySlot.limit;
-	var slot = memorySlot.slotNumber;
+	var base, limit, slot;
+	if(memorySlot){
+		// deem memory taken
+		_MemoryManager.toggleSlotStatus(memorySlot.slotNumber);
+		base = memorySlot.base;
+		limit = memorySlot.limit;
+		slot = memorySlot.slotNumber;
+	}
+	else{
+		base = -1;
+		limit = -1;
+		slot = -1;
+	}	
 	
 	//create new pcb 
-	var pcb = new PCB(state,pid,pc,base,limit,slot);
+	var pcb = new PCB(state,pid,pc,base,limit,slot,pri);
 	
 	// return new pcb
 	return pcb;
