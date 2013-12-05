@@ -138,6 +138,7 @@ function MemoryManager()
 		var filename = "process " + process.pid.toString();
 		
 		var code = krnFileSystemDriver.read(filename);
+		
 		if (code !== false){
 			var opcodes = code.split(/\s/);
 		

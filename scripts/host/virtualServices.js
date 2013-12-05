@@ -102,17 +102,16 @@ function createDiskTable()
 
     for( var i = 0; i < 256; i++ )
     {
-		if(i === 0) // First memory location of each block should be colored
+		if(i === 0) // First row colored
 		{
 			rows[i] = diskTable.insertRow(i);
 			rows[i].style.backgroundColor = "#b1c9b8";
 		}
-		else // Insert normal rows
+		else 
 		{
 			rows[i] = diskTable.insertRow(i);
 		}
         
-		// alloc num of cells per row
 		cells[i] = [];
 
         for( var x = 0; x < 2; x++ )
@@ -124,7 +123,7 @@ function createDiskTable()
 				cells[i][x].innerHTML = localStorage.key(i);
 			else
 				cells[i][x].innerHTML = "&nbsp;";
-			// Add cells to the row
+
             rows[rows.length - 1].appendChild(cells[i][x]);
         }
     }

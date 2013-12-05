@@ -22,7 +22,6 @@ function DeviceDriverFileSystem()                     // Add or override specifi
     this.read = krnRead;
     this.delete = krnDelete;
     this.listFiles = krnOccupiedDirectories;
-    
     this.findOpenDirectoryBlock = krnFindOpenDirectoryBlock;
     this.findOpenFileBlock = krnFindOpenFileBlock;
     this.setValueOccupied = krnSetValueOccupied;
@@ -142,38 +141,31 @@ function krnWrite(filename, data){
 
 function krnRead(filename){
 	try{
-		// Get the occupied directory that contains tkrnhe associated filename
-		var directoryKey = krnGetDirectoryKeyFromName(filename);
-		// Read and store the file block TSB from the directory block
-		var valueArray = JSON.parse( localStorage[directoryKey] );
-		var track = valueArray[1];
-		var sector = valueArray[2];
-		var block = valueArray[3];
+		var dirKey = krnGetDirectoryKeyFromName(filename);
+		var valArray = JSON.parse( localStorage[dirKey] );
+		var track = valArray[1];
+		var sect = valArray[2];
+		var block = valArray[3];
 		
-		// Put the file key (TSB) in the correct format
-		var parentFileKey = systemKey(track, sector, block);
+		var parentKey = systemKey(track, sect, block);
 		
-		// See if there are any linked files to the origin file block
-		var linkedFileArray = krnGetLinkedFileBlocks(parentFileKey);
+		// linked files 
+		var linkedFiles = krnGetLinkedFileBlocks(parentKey);
 		
-		// Vars needed to pull the data from the file values
-		var valueArray;
 		var data;
-		var dataSegmentsList = [];
+		var segments = [];
 		
-		// Get the data of the files and put it in an array
-		for(index in linkedFileArray)
+		for(index in linkedFiles)
 		{
-			valueArray = JSON.parse( localStorage[linkedFileArray[index]] );
-			data = valueArray[4];
-			// Trim the data of dashes (if any)
+			valArray = JSON.parse( localStorage[linkedFiles[index]] );
+			data = valArray[4];
+
 			if( data.indexOf("-") != -1 )
 				data = data.substring(0, data.indexOf("-"));
-			dataSegmentsList.push(data);
+			segments.push(data);
 		}
 
-		// Return the opcode string without commas
-		return dataSegmentsList.toString().replace(/,/g, "");
+		return segments.toString().replace(/,/g, "");
 	}
 	catch(e){
 		return false;
@@ -196,7 +188,7 @@ function krnDelete(filename){
 		var linkedFiles = krnGetLinkedFileBlocks(parentKey);
 	
 		for (i in linkedFiles){
-			krnFormatLineWithKey(linkedFiles[i]);
+			krnFormatLineFromKey(linkedFiles[i]);
 		}
 		return true;
 	}
@@ -205,7 +197,7 @@ function krnDelete(filename){
 	}
 }
 
-function krnFormatLineWithKey(key)
+function krnFormatLineFromKey(key)
 {
 	localStorage[key] = systemVal(0, -1, -1, -1, "");
 }

@@ -46,12 +46,12 @@ function Cpu() {
 	    		if( _ReadyQueue.size() > 0 ) 
 					_MemoryManager.rollOut(_ReadyQueue.getItem(_ReadyQueue.size()- 1));
 	    		else{
-	    			var rollIndex;
+	    			var rollie;
 			    	for( i in _ProcessList){
 				    	if (_ProcessList[i].slot != -1)
-				    		rollIndex = i;
+				    		rollie = i;
 			    	}
-			    	_MemoryManager.rollOut(_ProcessList[rollIndex]);
+			    	_MemoryManager.rollOut(_ProcessList[rollie]);
 			    }
 	    	}
 	    	_MemoryManager.rollIn(_CurrentProcess);
@@ -82,6 +82,7 @@ function Cpu() {
     this.fetch = function()
 	{
 		var relocationValue = _MemoryManager.getRelocationValue();
+		// was helping someone console.log(_Memory[this.PC + relocationValue]);
 		return _Memory[this.PC + relocationValue];
 	}
 	
