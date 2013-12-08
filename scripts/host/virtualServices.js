@@ -200,7 +200,7 @@ function updateReadyQueueDisplay()
 }
 function clearReadyQueueDisplay()
 {	
-		for(var i = 0; i < 3; i++){
+		for(var i = 0; i < 4; i++){
 			var elems = document.getElementsByName("rq"+(i+1)+"Data");
 			elems[0].innerHTML = "&nbsp;";
 			elems[1].innerHTML = "&nbsp;";
