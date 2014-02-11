@@ -3,6 +3,9 @@
 
 This is my Fall 2013 Operating Systems class initial project.
 
+- Click: start
+- type: help
+
 [**Try it Here!**](http://josephpisciotta.github.io/jOS-F/)
 
 ============
