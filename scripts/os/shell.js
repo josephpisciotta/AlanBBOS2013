@@ -601,7 +601,9 @@ function shellKrnTrapErrorTest(){
 function shellBackgroundColor(args){
  	if (args.length > 0)
     {
-        _Canvas.style.backgroundColor= "#" + args[0];
+    	_Canvas.style.background= "#"+args[0];
+        _DrawingContext.fillStyle= "#"+args[0];
+		_DrawingContext.fill();
     }
     else
     {
