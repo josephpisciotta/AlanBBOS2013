@@ -5,7 +5,34 @@ This is my Fall 2013 Operating Systems class initial project.
 
 ============
 
-#Command Line Interface
+##Operation and User Interface
+
+This is a Virtual Operating System. The Storage which it uses is the HTML Local Storage system. Memory is all virtual so it still requires management (allocation and deallocation). Like almost every operating system that has existed in the past few decades, this virtual one seperates firmware and system calls from user calls. It manages a virtual Interrupt Queue. Keyboards and FileSystems have had drivers written to operate. Programs do not have unlimited access to access memory. They are allowed to access what the system gives them access to. 
+
+###Console
+
+- The console can be used in the style of any Terminal application or Command Prompt. From the console you can run a number of the built in programs.
+- You may create files (stored in bytes in a filesystem format created for the OS)
+- You may load programs from the Program input. The programs are a limited form of 6502 Assembly (I have provided one already typed in) the programs must be given in the HEX form of Assembly
+
+###Memory and Disk Display
+While running a program the process memory will be displayed in the memory table and and files or programs that are stored on Disk will be under the Disk table.
+
+###CPU Display
+This displays the current state of the CPU registers, accumulator, and program counter.
+
+###Ready Queue Display
+This displays the Ready Queue for the processes that are waiting to be handled by the CPU.
+
+###Current PCB Display
+This displays the information of the currently running process.
+
+###Log
+This displays the events that register to the OS. Not everything should be displayed to the Console but as a designer, seeing what is registered by the OS is very important.
+
+============
+
+##Command Line Interface
 
 **Commands**
 
@@ -37,7 +64,7 @@ This is my Fall 2013 Operating Systems class initial project.
 - **ls**: Displays all files on disk
 
 
-
+===============
 
 
 
