@@ -34,6 +34,7 @@ This is my Fall 2013 Operating Systems class initial project.
 - **runall**: runs all loaded process, both on memory and in storage. The scheduler handles how these programs are run.
 - **ps**: displays all the currently running processes
 - **kill &lt;pid&gt;**: kills the process with the given &lt;pid&gt;
+- **ls**: Displays all files on disk
 
 
 
