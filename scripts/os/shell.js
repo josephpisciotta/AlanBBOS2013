@@ -314,8 +314,10 @@ function shellParseInput(buffer)
     {
         var arg = trim(tempList[i]);
         if (arg != "")
-        {
+        {	
             retVal.args[retVal.args.length] = tempList[i];
+            console.log(retVal);
+
         }
     }
     return retVal;
@@ -597,13 +599,45 @@ function shellKrnTrapErrorTest(){
     // we don't want to kill the OS so we'll pass false for the kill switch
     return krnTrapError("This is just an OS Error trap test.", false);
 }
+function hex2rgb( hex ) {
+	var h = hex;
+	var tempArr = h.split("");
+	delete tempArr[0];
+	h = tempArr.join("");
+	
+	u = r;
+	console.log(r);
+	if ( h.indexOf('#') == 0) {
+			console.log(h);
+			h = h.slice(1);
+			console.log(h + h.length);
+	}
+	var res = {};
+	if ( h.length === 6 ) {
+		res = {"r": h.substring(0,2), "g": h.substring(2,4), "b": h.substring(4,6)};
+	} 
+	else if ( r.length === 3 ) {
+		res = {"r": "" + h.substring(0,1) + h.substring(0,1)+ "", "g": ""+h.substring(1,2)+h.substring(1,2)+"", "b": ""+h.substring(2,3)+h.substring(2,3)};
+	} 
+	else {
+		return false;
+	}
+	var r = parseInt(res["r"], 16);
+	var g = parseInt(res["g"], 16);
+	var b = parseInt(res["b"], 16);
 
+	return [r,g,b].join();
+}
 function shellBackgroundColor(args){
  	if (args.length > 0)
     {
-    	_Canvas.style.background= "#"+args[0];
-        _DrawingContext.fillStyle= "#"+args[0];
-		_DrawingContext.fill();
+    	var inp = args[0];
+    	console.log(typeof inp);
+    	var rgb = hex2rgb(inp);
+    	console.log(rgb);
+    	console.log("_Canvas.style.backgroundColor = 'rgb('"+rgb+"')'");
+    	_Canvas.style.backgroundColor = 'rgb('+rgb+')';
+    	//_DrawingContext.fillStyle = "rgb("+rgb+")";
     }
     else
     {
